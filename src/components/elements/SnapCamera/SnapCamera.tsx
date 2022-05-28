@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {
   PinchGestureHandler,
   PinchGestureHandlerGestureEvent,
@@ -38,16 +38,12 @@ import {
   SCALE_FULL_ZOOM,
   BUTTON_SIZE,
 } from '../../../constants';
-import PermissionContext from '../../../context/permission-context';
-import {PermissionCamera} from './PermissionCamera';
-import changeNavigationBarColor from 'react-native-navigation-bar-color-fix-behavior-status-bar';
+
 import Icon from '../Icon';
-import {useAppDispatch} from '@src/redux/useRedux';
-import {resetSelectionArts} from '@src/redux/slices/artSlice';
 
 type SnapCameraProps = {
   children?: React.ReactNode;
-  onSwitchToAR: () => void;
+  onSwitchToAR?: () => void;
 };
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
@@ -56,9 +52,11 @@ Reanimated.addWhitelistedNativeProps({
 });
 
 //Construct Component
-const SnapCamera: React.FC<SnapCameraProps> = ({children, ...rest}) => {
-  const dispatch = useAppDispatch();
-  const {isPass} = React.useContext(PermissionContext);
+const SnapCamera: React.FC<SnapCameraProps> = ({
+  children,
+  onSwitchToAR,
+  ...rest
+}) => {
   const navigation = useNavigation();
   const camera = React.useRef<Camera>(null);
   const [isCameraInitialized, setIsCameraInitialized] = React.useState(false);
@@ -283,11 +281,6 @@ const SnapCamera: React.FC<SnapCameraProps> = ({children, ...rest}) => {
     // ImagePicker.launchImageLibrary({mediaType: 'mixed'}, setResponse);
   }, []);
 
-  const _onSwitchToAR = React.useCallback((type?: any, options?: any) => {
-    dispatch(resetSelectionArts());
-    navigation.navigate('AcquireARScreen' as any);
-  }, []);
-
   React.useEffect(() => {
     navigation.addListener('beforeRemove', (e) => {
       setIsCameraInitialized(false);
@@ -299,7 +292,7 @@ const SnapCamera: React.FC<SnapCameraProps> = ({children, ...rest}) => {
 
   return (
     <>
-      {device != null && isPass ? (
+      {device != null && (
         <Container style={[styles.cameraContainer]}>
           <PinchGestureHandler
             onGestureEvent={onPinchGesture}
@@ -361,7 +354,7 @@ const SnapCamera: React.FC<SnapCameraProps> = ({children, ...rest}) => {
           <Container style={styles.bottomRightRow}>
             <PressableOpacity
               style={styles.squre}
-              onPress={_onSwitchToAR}
+              onPress={onSwitchToAR}
               disabledOpacity={0.4}>
               <Icon name="vr-cardboard" color="white" size={24} />
             </PressableOpacity>
@@ -438,8 +431,6 @@ const SnapCamera: React.FC<SnapCameraProps> = ({children, ...rest}) => {
             </PressableOpacity>
           </Container>
         </Container>
-      ) : (
-        <PermissionCamera />
       )}
     </>
   );

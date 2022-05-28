@@ -12,4 +12,7 @@ export default StyleSheet.create({
     marginRight: 5,
     textTransform: 'capitalize',
   },
+  settingOptionTextUpper: {
+    marginRight: 5,
+  },
 });

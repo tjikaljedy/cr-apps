@@ -10,15 +10,15 @@ type ChangeLanguageModalProps = {
 const languageOptions: RadioOption[] = [
   {
     label: 'English',
-    value: 'english',
+    value: 'en',
   },
   {
-    label: 'Vietnamese',
-    value: 'vietnamese',
+    label: 'Indonesian',
+    value: 'id',
   },
   {
-    label: 'French',
-    value: 'French',
+    label: 'Hindi',
+    value: 'hi-in',
   },
 ];
 

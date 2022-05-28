@@ -10,27 +10,45 @@ import {
   Icon,
   Dialog,
 } from '@src/components/elements';
+import {fetchDefault} from '@store/slices/cameraSlice';
+import {useAppSelector} from '@src/redux/useRedux';
 import {mockStories, Story} from '@src/data/mock-stories';
 import {profile} from '@src/data/mock-profile';
 import styles from './styles';
+import StoriesCameraModal from './StoriesCameraModal';
 
 //Default
 type StoriesProps = {};
 
 const Stories: React.FC<StoriesProps> = () => {
-  //Default
   const navigation = useNavigation();
+  const defaultValue = useAppSelector(fetchDefault);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
 
   const {
     colors: {primary},
   } = useTheme();
 
-  const _onAddItemPressed = (name?: string) => {
-    return () => {
-      navigation.navigate('AcquireScreen' as any);
-    };
+  const _hideModal = () => {
+    setIsModalVisible(false);
   };
+
+  const _onCameraSelectMode = React.useCallback((item: any) => {
+    setIsModalVisible(false);
+    return item.value === 'ar'
+      ? navigation.navigate('AcquireARScreen' as any)
+      : navigation.navigate('AcquireScreen' as any);
+  }, []);
+
+  const _onAddItemPressed = React.useCallback(
+    (name?: string) => {
+      return () =>
+        defaultValue.value === 'prompt'
+          ? setIsModalVisible(true)
+          : _onCameraSelectMode(defaultValue);
+    },
+    [defaultValue],
+  );
 
   const _renderProfileStory = () => {
     return (
@@ -76,7 +94,7 @@ const Stories: React.FC<StoriesProps> = () => {
         </Touchable>
         <Text
           style={styles.storiesAddItemTitle}
-          numberOfLines={1}>{`Add story`}</Text>
+          numberOfLines={1}>{`Add Stories`}</Text>
       </Container>
       <Container style={styles.storiesItemOthers}>
         <Carousel
@@ -87,6 +105,11 @@ const Stories: React.FC<StoriesProps> = () => {
           hasPagination={false}
         />
       </Container>
+      <StoriesCameraModal
+        isVisible={isModalVisible}
+        hideModal={_hideModal}
+        onItemPressed={_onCameraSelectMode}
+      />
     </Container>
   );
 };

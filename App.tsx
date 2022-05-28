@@ -39,16 +39,14 @@ const App = () => {
   React.useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       console.log('>> 0' + appStateVisible);
-      console.log('>> 1' + nextAppState);
     });
     return () => {
-      console.log('>> 2' + appStateVisible);
+      console.log('>> 1' + appStateVisible);
       subscription.remove();
     };
   }, []);
 
   React.useEffect(() => {
-    console.log('>> 3' + appStateVisible);
     if (appStateVisible !== 'active') {
       return;
     }

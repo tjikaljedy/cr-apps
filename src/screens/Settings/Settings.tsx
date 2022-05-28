@@ -12,7 +12,10 @@ import ListRowItem from '@src/components/elements/List/ListRowItem';
 import styles from './styles';
 import ChangeAppearanceModal from './ChangeAppearanceModal';
 import ChangeLanguageModal from './ChangeLanguageModal';
+import ChangeCameraModal from './ChangeCameraModal';
 import {useTheme} from '@src/hooks';
+import {fetchDefault} from '@store/slices/cameraSlice';
+import {useAppSelector} from '@src/redux/useRedux';
 import {getStoreURL} from '@src/utils/store-info';
 
 type SettingsProps = {};
@@ -24,6 +27,8 @@ const Settings: React.FC<SettingsProps> = () => {
     React.useState(false);
   const [isLanguageModalVisible, setIsLanguageModalVisible] =
     React.useState(false);
+  const [isCameraModalVisible, setIsCameraModalVisible] = React.useState(false);
+  const defaultCamera = useAppSelector(fetchDefault);
 
   React.useEffect(() => {
     setEnableRTL(I18nManager.isRTL);
@@ -35,6 +40,9 @@ const Settings: React.FC<SettingsProps> = () => {
 
   const _hideLanguageModal = () => {
     setIsLanguageModalVisible(false);
+  };
+  const _hideCameraModal = () => {
+    setIsCameraModalVisible(false);
   };
 
   const chevronIconName = I18nManager.isRTL ? 'chevron-left' : 'chevron-right';
@@ -81,6 +89,20 @@ const Settings: React.FC<SettingsProps> = () => {
           rightIcon={
             <View style={styles.settingOptionContainer}>
               <Text style={styles.settingOptionText}>English</Text>
+              <Icon name={chevronIconName} />
+            </View>
+          }
+        />
+        <Divider />
+        <ListRowItem
+          title="Camera Mode"
+          titleColor={colors.text}
+          onPress={() => setIsCameraModalVisible(true)}
+          rightIcon={
+            <View style={styles.settingOptionContainer}>
+              <Text style={styles.settingOptionTextUpper}>
+                {defaultCamera.label}
+              </Text>
               <Icon name={chevronIconName} />
             </View>
           }
@@ -174,6 +196,10 @@ const Settings: React.FC<SettingsProps> = () => {
       <ChangeLanguageModal
         isVisible={isLanguageModalVisible}
         hideModal={_hideLanguageModal}
+      />
+      <ChangeCameraModal
+        isVisible={isCameraModalVisible}
+        hideModal={_hideCameraModal}
       />
     </View>
   );
