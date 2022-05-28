@@ -22,7 +22,7 @@ import {
   fetchPlanStatus,
   updateSelectedArt,
   updatePlanStatus,
-} from '@src/redux/slices/storiesARSlice';
+} from '@src/redux/slices/artSlice';
 import {selectSortedArts} from '@src/redux/combinedSelector';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
 import {mockItemArt} from '@src/data/mock-arts';
@@ -108,12 +108,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
         }}
       />
       <Container style={[styles.cameraContainer]}>
-        <ViroARSceneNavigator
-          style={styles.screenNavContainer}
-          initialScene={{
-            scene: _renderScreen,
-          }}
-        />
+        <SnapCameraAR onInitialScene={_renderScreen} />
 
         <Container style={styles.topCenterRow}>
           {!planReady ? (

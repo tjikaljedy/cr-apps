@@ -6,8 +6,8 @@ import {
   ViroQuad,
   ViroSpotLight,
 } from '@viro-community/react-viro';
-import {ArtRowItem} from '../../../redux/ArtRowItem';
-import * as LoadConstants from './LoadingStateConstants';
+import {ArtRowItem, LOADING, LOADED} from '../../../redux/ArtRowItem';
+
 const faker = require('@faker-js/faker');
 interface IProps {
   modelIDProps?: ArtRowItem;
@@ -140,13 +140,13 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
 
   _onObjectLoadStart = (uuid: any) => {
     return () => {
-      this.props.onLoadCallback(uuid, LoadConstants.LOADING);
+      this.props.onLoadCallback(uuid, LOADING);
     };
   };
 
   _onObjectLoadEnd = (uuid: any) => {
     return () => {
-      this.props.onLoadCallback(uuid, LoadConstants.LOADED);
+      this.props.onLoadCallback(uuid, LOADED);
       if (!this.state.nodeIsVisible) {
         this.setState({
           nodeIsVisible: true,

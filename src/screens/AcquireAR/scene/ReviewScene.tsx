@@ -4,7 +4,6 @@ import {
   ViroAmbientLight,
   ViroDirectionalLight,
   ViroSpotLight,
-  ViroConstants,
 } from '@viro-community/react-viro';
 import {ArtRowItem} from '@src/redux/ArtRowItem';
 import ArtItemRender from '@src/components/elements/SnapCameraAR/ArtItemRender';
@@ -13,8 +12,8 @@ import {RootState} from '@src/redux/useRedux';
 const faker = require('@faker-js/faker');
 
 const mapStateToProps = (state: RootState) => ({
-  allArts: state.storiesAR.allArts,
-  selectArt: state.storiesAR.selectedArt,
+  allArts: state.artSlice.allArts,
+  selectArt: state.artSlice.selectedArt,
 });
 const mapDispatchToProps = () => ({});
 
@@ -35,7 +34,6 @@ class ReviewScene extends React.PureComponent<
   private renderedObjects: any = [];
   private defaultBitMask = 2;
   _onLoadCallback = (uuid: any, state: any) => {};
-
   _onHitTestMethod = (callback: any) => {
     this.arSceneRef.current
       .getCameraOrientationAsync()
@@ -72,7 +70,7 @@ class ReviewScene extends React.PureComponent<
     let models = this._renderModels();
     return (
       <ViroARScene
-        ref={this.arSceneRef}
+        ref={this.arSceneRef as any}
         physicsWorld={{gravity: [0, -9.81, 0]} as any}
         onTrackingUpdated={this.props.onInitialized}>
         <ViroAmbientLight color="#ffffff" intensity={20} />

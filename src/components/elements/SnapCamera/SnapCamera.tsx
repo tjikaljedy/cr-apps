@@ -43,10 +43,11 @@ import {PermissionCamera} from './PermissionCamera';
 import changeNavigationBarColor from 'react-native-navigation-bar-color-fix-behavior-status-bar';
 import Icon from '../Icon';
 import {useAppDispatch} from '@src/redux/useRedux';
-import {resetSelectionArts} from '@src/redux/slices/storiesARSlice';
+import {resetSelectionArts} from '@src/redux/slices/artSlice';
 
 type SnapCameraProps = {
   children?: React.ReactNode;
+  onSwitchToAR: () => void;
 };
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);

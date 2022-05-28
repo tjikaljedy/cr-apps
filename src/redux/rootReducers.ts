@@ -2,12 +2,12 @@ import {combineReducers} from '@reduxjs/toolkit';
 import {persistCombineReducers} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import theme from './slices/themeSlice';
-import storiesAR from './slices/storiesARSlice';
+import artSlice from './slices/artSlice';
 
 //Reducer
 const reducers = {
   theme,
-  storiesAR,
+  artSlice,
 };
 
 const persistConfig = {

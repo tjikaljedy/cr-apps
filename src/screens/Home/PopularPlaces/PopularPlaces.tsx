@@ -14,8 +14,8 @@ const PopularPlaces: React.FC<PopularPlacesProps> = () => {
 
   const _onButtonActionPressed = () => {
     navigation.navigate(
-      'PlaceListScreen' as any,
-      {title: 'Popular Near You'} as any,
+      'PlaceListScreen' as never,
+      {title: 'Popular Near You'} as never,
     );
   };
 

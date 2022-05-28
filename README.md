@@ -44,6 +44,7 @@ https://github.com/PSPatel5/react-native-boilerplate
 
 ## Others
 
+ViroTrackingStateConstants
 "@viro-community/react-viro": "file:../rn-repo/@viro-community/react-viro/viro-community-react-viro-2.23.0.tgz",
 
 - source={{
@@ -55,6 +56,7 @@ https://github.com/PSPatel5/react-native-boilerplate
   position={[0, -2, -2]}
 
   ## Viro
+
   Render models added to the scene.
   modelItems - list of models added by user; comes from redux, see js/redux/reducers/arobjects.js
   startingBitMask - used for adding shadows for each of the, for each new object added to the scene,
