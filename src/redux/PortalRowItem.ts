@@ -1,5 +1,12 @@
 import {ImageSourcePropType} from 'react-native';
 
+export const NONE = 'NONE';
+export const LOADING = 'LOADING';
+export const LOAD_ERROR = 'ERROR';
+export const LOADED = 'LOADED';
+export const POSITION_OFFSET = 0.05;
+export type ITEM_TYPE = 'PORTAL';
+
 export interface Image360 {
   source: ImageSourcePropType;
   width: number;
@@ -24,10 +31,5 @@ export interface PortalRowItem {
   physics?: any;
   ref_pointer?: any;
   selected?: boolean;
+  item_type: ITEM_TYPE;
 }
-
-export const NONE = 'NONE';
-export const LOADING = 'LOADING';
-export const LOAD_ERROR = 'ERROR';
-export const LOADED = 'LOADED';
-export const POSITION_OFFSET = 0.05;

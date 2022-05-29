@@ -16,6 +16,7 @@ export const mockItemArt: ArtRowItem = {
     uri: `https://crazyrich-app.herokuapp.com/arts/icon_icecreamman.png`,
   },
   type: 'VRX',
+  item_type: 'ART',
   obj: require('@src/assets/arts/icecreamman_anim/icecreamman_anim_pbr.vrx'),
   resources: [
     require('@src/assets/arts/icecreamman_anim/icecream_man_pbr_Base_Color.png'),
@@ -49,6 +50,7 @@ export const mockArts: ArtRowItem[] = [
     scale: [0.2, 0.2, 0.2],
     position: [0, 0.497823 + POSITION_OFFSET, 0],
     type: 'VRX',
+    item_type: 'ART',
     physics: undefined,
     ref_pointer: undefined,
     resources: [
@@ -71,6 +73,7 @@ export const mockArts: ArtRowItem[] = [
     scale: [0.2, 0.2, 0.2],
     position: [0, 0.49489 + POSITION_OFFSET, 0],
     type: 'VRX',
+    item_type: 'ART',
     physics: undefined,
     ref_pointer: undefined,
     resources: [
@@ -93,6 +96,7 @@ export const mockArts: ArtRowItem[] = [
     scale: [0.2, 0.2, 0.2],
     position: [0, 0.49489 + POSITION_OFFSET, 0],
     type: 'VRX',
+    item_type: 'ART',
     physics: undefined,
     ref_pointer: undefined,
     resources: [
@@ -115,6 +119,7 @@ export const mockArts: ArtRowItem[] = [
     scale: [0.2, 0.2, 0.2],
     position: [0, 0.451719 + POSITION_OFFSET, 0],
     type: 'VRX',
+    item_type: 'ART',
     physics: undefined,
     ref_pointer: undefined,
     resources: [
@@ -136,6 +141,7 @@ export const mockArts: ArtRowItem[] = [
     scale: [0.2, 0.2, 0.2],
     position: [0, 0.506186 + POSITION_OFFSET, 0],
     type: 'VRX',
+    item_type: 'ART',
     physics: undefined,
     ref_pointer: undefined,
     resources: [
@@ -144,6 +150,7 @@ export const mockArts: ArtRowItem[] = [
     ],
   },
   {
+    id: faker.datatype.uuid(),
     name: 'object_star',
     selected: false,
     loading: NONE,
@@ -157,6 +164,7 @@ export const mockArts: ArtRowItem[] = [
     position: [0, 0.939014 + POSITION_OFFSET, 0],
     physics: undefined,
     type: 'VRX',
+    item_type: 'ART',
     ref_pointer: undefined,
     lighting_mode: 'IBL',
     spotlight_position_y: 9.2,
@@ -168,6 +176,7 @@ export const mockArts: ArtRowItem[] = [
     ],
   },
   {
+    id: faker.datatype.uuid(),
     name: 'object_rainbow',
     selected: false,
     loading: NONE,
@@ -181,6 +190,7 @@ export const mockArts: ArtRowItem[] = [
     position: [0, 0.235285 + POSITION_OFFSET, 0],
     physics: undefined,
     type: 'VRX',
+    item_type: 'ART',
     ref_pointer: undefined,
     lighting_mode: 'IBL',
     spotlight_position_y: 9.2,

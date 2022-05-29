@@ -172,13 +172,15 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
               )}
             </Container>
             <Container style={styles.topRightRow}>
-              <PressableOpacity style={styles.button} disabledOpacity={0.4}>
-                <Icon
-                  name="camera-reverse"
-                  useIonicons
-                  color="white"
-                  size={24}
-                />
+              <PressableOpacity style={[styles.button]} disabledOpacity={0.4}>
+                <Icon name="camera" useIonicons color="white" size={24} />
+              </PressableOpacity>
+            </Container>
+            <Container style={styles.bottomLeftRow}>
+              <PressableOpacity
+                style={[styles.button, {backgroundColor: `rgba(0,0,0,0.4)`}]}
+                disabledOpacity={0.4}>
+                <Icon name="bell" useMaterialicons color="white" size={28} />
               </PressableOpacity>
             </Container>
             <Container style={[styles.bottomRow]}>

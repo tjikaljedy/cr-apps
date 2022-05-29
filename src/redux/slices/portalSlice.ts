@@ -5,71 +5,77 @@ import {
   PayloadAction,
 } from '@reduxjs/toolkit';
 
-import {mockArts} from '@src/data/mock-arts';
-import {ArtRowItem} from '@src/redux/ArtRowItem';
+import {mockPortals} from '@src/data/mock-portals';
+import {PortalRowItem} from '@src/redux/PortalRowItem';
 import {RootState} from '../useRedux';
 
 const sliceName = 'portalSlice';
-type arts = ArtRowItem;
+type portal = PortalRowItem;
 
-export type ArtState = {
+export type PortalState = {
   loading?: boolean | null | undefined;
   planReady?: boolean | null | undefined;
-  allArts?: Array<ArtRowItem>;
-  selectedArt?: ArtRowItem;
+  allPortals?: Array<PortalRowItem>;
+  selectedPortal?: PortalRowItem;
 };
 
-type ArtPayload = {
+type PortalPayload = {
   payload: {
     loading?: boolean | null | undefined;
     planReady?: boolean | null | undefined;
-    allArts?: Array<ArtRowItem>;
-    selectedArt?: ArtRowItem;
+    allPortals?: Array<PortalRowItem>;
+    selectedPortal?: PortalRowItem;
   };
 };
 
 //Sample from ts-rn
-export const fetchArtsAPI = createAsyncThunk(
-  `${sliceName}/fetchArts-api`,
+export const fetchPortalsAPI = createAsyncThunk(
+  `${sliceName}/fetchPortals-api`,
   async () => {
-    return mockArts;
+    return mockPortals;
   },
 );
 //Source from modern-redux
-const artsAdapter = createEntityAdapter<arts>({
-  selectId: (arts: ArtRowItem) => arts.id as any,
+const portalsAdapter = createEntityAdapter<portal>({
+  selectId: (portal: PortalRowItem) => portal.id as any,
 });
 
 const slice = createSlice({
   name: sliceName,
-  initialState: artsAdapter.getInitialState({
+  initialState: portalsAdapter.getInitialState({
     loading: false,
     planReady: false,
-    allArts: [],
-    selectedArt: undefined,
-  } as ArtState),
+    allPortals: [],
+    selectedPortal: undefined,
+  } as PortalState),
   reducers: {
-    updatePlanStatus(state: ArtState, {payload: {planReady}}: ArtPayload) {
+    updatePlanStatus(
+      state: PortalState,
+      {payload: {planReady}}: PortalPayload,
+    ) {
       state.planReady = planReady;
     },
-    updateSelectedArt(state: ArtState, action: PayloadAction<ArtRowItem>) {
-      state.allArts?.push(action.payload);
-      state.selectedArt = action.payload;
+    updateSelectedPortal(
+      state: PortalState,
+      action: PayloadAction<PortalRowItem>,
+    ) {
+      state.allPortals?.push(action.payload);
+      state.selectedPortal = action.payload;
     },
-    resetSelectionArts(state: ArtState) {
-      state.allArts = [];
-      state.selectedArt = undefined;
+    resetSelectionPortals(state: PortalState) {
+      state.allPortals = [];
+      state.selectedPortal = undefined;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchArtsAPI.pending, (state) => {
+    builder.addCase(fetchPortalsAPI.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(fetchArtsAPI.fulfilled, (state, action) => {
-      artsAdapter.setAll(state, action.payload);
+    builder.addCase(fetchPortalsAPI.fulfilled, (state, action) => {
+      portalsAdapter.setAll(state, action.payload);
       state.loading = false;
     });
-    builder.addCase(fetchArtsAPI.rejected, (state) => {
+    builder.addCase(fetchPortalsAPI.rejected, (state) => {
       state.loading = false;
     });
   },
@@ -78,14 +84,16 @@ const slice = createSlice({
 //Sample from ts-rn
 const {actions, reducer} = slice;
 
-export const {updatePlanStatus, updateSelectedArt, resetSelectionArts} =
+export const {updatePlanStatus, updateSelectedPortal, resetSelectionPortals} =
   actions;
 export const fetchAllSelectionArts = (state: RootState) =>
-  state.artSlice.allArts;
-export const selectedArt = (state: RootState) => state.artSlice.selectedArt;
-export const fetchPlanStatus = (state: RootState) => state.artSlice.planReady;
+  state.portalSlice.allPortals;
+export const selectedArt = (state: RootState) =>
+  state.portalSlice.selectedPortal;
+export const fetchPlanStatus = (state: RootState) =>
+  state.portalSlice.planReady;
 
-export const {selectAll: selectArts} = artsAdapter.getSelectors(
-  (state: RootState) => state.artSlice,
+export const {selectAll: selectArts} = portalsAdapter.getSelectors(
+  (state: RootState) => state.portalSlice,
 );
 export default reducer;
