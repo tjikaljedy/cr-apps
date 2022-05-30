@@ -25,10 +25,11 @@ interface IState {
   runAnimation: boolean;
   showParticles: boolean;
   itemClickedDown: boolean;
+  lastPosition: any;
 }
 
 export default class ArtItemRender extends React.PureComponent<IProps, IState> {
-  state: IState = {
+  /*state: IState = {
     position: [0, -10, -1],
     rotation: [0, 0, 0],
     scale: this.props.modelIDProps?.scale,
@@ -37,9 +38,39 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
     runAnimation: true,
     showParticles: true,
     itemClickedDown: false,
-  };
+    lastPosition: [0, -10, -1],
+  };*/
+
+  constructor(props: IProps | Readonly<IProps>) {
+    super(props);
+    this.state = {
+      position: [0, -10, -1],
+      rotation: [0, 0, 0],
+      scale: props.modelIDProps?.scale,
+      nodeIsVisible: false,
+      shouldBillboard: true,
+      runAnimation: true,
+      showParticles: true,
+      itemClickedDown: false,
+      lastPosition: [0, -10, -1],
+    };
+    this._distance = this._distance.bind(this);
+    this._onARHitTestResults = this._onARHitTestResults.bind(this);
+    this._onDrag = this._onDrag.bind(this);
+    this._onObjectLoadEnd = this._onObjectLoadEnd.bind(this);
+    this._onObjectLoadStart = this._onObjectLoadStart.bind(this);
+    this._onPinch = this._onPinch.bind(this);
+    this._onRotate = this._onRotate.bind(this);
+    this._setInitialPlacement = this._setInitialPlacement.bind(this);
+    this._updateInitialRotation = this._updateInitialRotation.bind(this);
+  }
+
   private arNodeRef: React.RefObject<typeof ViroNode> = React.createRef();
   private arSpotRef: React.RefObject<typeof ViroSpotLight> = React.createRef();
+
+  _onDrag = (dragToPos: any, source: any) => {
+    //this.setState({lastPosition: dragToPos});
+  };
 
   _onRotate = (rotateState: any, rotationFactor: any, source: any) => {
     if (rotateState == 3) {
@@ -60,6 +91,23 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
       ],
     });
   };
+
+  _onPinch(pinchState: any, scaleFactor: any, source: any) {
+    var newScale = this.state.scale.map((x: any) => {
+      return x * scaleFactor;
+    });
+
+    if (pinchState == 3) {
+      this.setState({
+        scale: newScale,
+      });
+
+      return;
+    }
+
+    this.arNodeRef.current?.setNativeProps({scale: newScale});
+    //this.spotLight.setNativeProps({shadowFarZ: 6 * newScale[0]});
+  }
 
   _distance = (vectorOne: any, vectorTwo: any) => {
     const distanceData = Math.sqrt(
@@ -163,7 +211,6 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
       <ViroNode
         key={uuid}
         ref={this.arNodeRef}
-        highAccuracyEvents={true}
         visible={this.state.nodeIsVisible}
         position={this.state.position}
         scale={this.state.scale}
@@ -200,13 +247,9 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
           shadowOpacity={0.9}
         />
 
-        <ViroNode
-          key={`vn-${uuid}`}
-          highAccuracyEvents={true}
-          position={modelItem.position as any}>
+        <ViroNode key={`vn-${uuid}`} position={modelItem.position as any}>
           <Viro3DObject
             key={`vo-${uuid}`}
-            highAccuracyEvents={true}
             animation={{...modelItem.animation, run: true}}
             lightReceivingBitMask={this.props.bitMask | 1}
             shadowCastingBitMask={this.props.bitMask}
@@ -218,7 +261,7 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
             onClick={() => {}}
             onError={() => {}}
             onRotate={this._onRotate}
-            onPinch={() => {}}
+            onPinch={this._onPinch}
             onLoadStart={this._onObjectLoadStart(uuid)}
             onLoadEnd={this._onObjectLoadEnd(uuid)}
           />

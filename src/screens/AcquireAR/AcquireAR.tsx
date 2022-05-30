@@ -26,7 +26,6 @@ import {
 } from '@src/redux/slices/artSlice';
 import {selectSortedArts} from '@src/redux/combinedSelector';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
-import {useStatusNav} from '@src/hooks';
 type AcquireARProps = {};
 
 const AcquireAR: React.FC<AcquireARProps> = () => {
