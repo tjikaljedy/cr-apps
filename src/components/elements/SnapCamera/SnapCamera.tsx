@@ -356,7 +356,7 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
               style={styles.squre}
               onPress={onSwitchToAR}
               disabledOpacity={0.4}>
-              <Icon name="vr-cardboard" color="white" size={24} />
+              <Icon name="cube-scan" useMaterialicons color="white" size={30} />
             </PressableOpacity>
           </Container>
           <Container style={styles.topRightRow}>

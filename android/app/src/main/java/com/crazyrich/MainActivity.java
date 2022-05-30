@@ -15,6 +15,7 @@ public class MainActivity extends ReactActivity {
     setTheme(R.style.AppTheme);
     I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
     sharedI18nUtilInstance.allowRTL(getApplicationContext(), true);
+
     super.onCreate(savedInstanceState, persistentState);
   }
 

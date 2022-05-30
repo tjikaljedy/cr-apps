@@ -1,7 +1,7 @@
 import {Dimensions, Platform} from 'react-native';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 
-const SAFE_BOTTOM =
+export const SAFE_BOTTOM =
   Platform.select({
     ios: StaticSafeAreaInsets.safeAreaInsetsBottom,
   }) ?? 0;

@@ -1,4 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {RootState} from '../useRedux';
+
 const sliceName = 'theme';
 
 const slice = createSlice({
@@ -27,6 +29,7 @@ const slice = createSlice({
 });
 
 export const {changeTheme, setDefaultTheme} = slice.actions;
+export const selectedTheme = (state: RootState) => state.theme;
 export default slice.reducer;
 
 export type ThemeState = {

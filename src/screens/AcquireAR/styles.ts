@@ -4,6 +4,7 @@ import {
   SCREEN_WIDTH,
   CONTENT_SPACING,
   BUTTON_SIZE,
+  SAFE_BOTTOM,
 } from '@src/constants';
 
 export default StyleSheet.create({
@@ -18,7 +19,7 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     flexDirection: 'column',
-    backgroundColor: 'transparent',
+    backgroundColor: 'translucent',
   },
   topCenterRow: {
     position: 'absolute',

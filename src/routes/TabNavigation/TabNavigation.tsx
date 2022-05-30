@@ -1,12 +1,11 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeStack from '../Stacks/HomeStack';
 import AccountStack from '../Stacks/AccountStack';
 import NotificationStack from '../Stacks/NotificationStack';
 import ActivityHistoryStack from '../Stacks/ActivityHistoryStack';
-import NavProvider from '@src/components/common/NavProvider/NavProvider';
-import {useTheme} from '@src/hooks';
 
 type TabNavigationProps = {};
 type TabBarIconProps = {
@@ -55,33 +54,24 @@ const renderTabBarIcon = (routeName: string) => {
 };
 
 const TabNavigation: React.FC<TabNavigationProps> = () => {
-  const {colors} = useTheme();
   return (
-    <>
-      <NavProvider
-        params={{
-          overwrite: false,
-          navColor: colors.card,
-        }}
-      />
-      <Navigator
-        initialRouteName="Home"
-        screenOptions={(props) => {
-          const {
-            route: {name: routeName},
-          } = props;
-          return {
-            tabBarHideOnKeyboard: true,
-            headerShown: false,
-            tabBarIcon: renderTabBarIcon(routeName),
-          };
-        }}>
-        <Tab.Screen name="Explore" component={HomeStack} />
-        <Tab.Screen name="Activity" component={ActivityHistoryStack} />
-        <Tab.Screen name="Notifications" component={NotificationStack} />
-        <Tab.Screen name="Account" component={AccountStack} />
-      </Navigator>
-    </>
+    <Navigator
+      initialRouteName="Home"
+      screenOptions={(props) => {
+        const {
+          route: {name: routeName},
+        } = props;
+        return {
+          tabBarHideOnKeyboard: true,
+          headerShown: false,
+          tabBarIcon: renderTabBarIcon(routeName),
+        };
+      }}>
+      <Tab.Screen name="Explore" component={HomeStack} />
+      <Tab.Screen name="Activity" component={ActivityHistoryStack} />
+      <Tab.Screen name="Notifications" component={NotificationStack} />
+      <Tab.Screen name="Account" component={AccountStack} />
+    </Navigator>
   );
 };
 

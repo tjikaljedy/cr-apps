@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useTheme, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {Image, View} from 'react-native';
 
 import {
@@ -10,6 +10,7 @@ import {
   Icon,
   Dialog,
 } from '@src/components/elements';
+import {useTheme} from '@src/hooks';
 import {fetchDefault} from '@store/slices/cameraSlice';
 import {useAppSelector} from '@src/redux/useRedux';
 import {mockStories, Story} from '@src/data/mock-stories';
