@@ -1,66 +1,100 @@
-import React, {useContext} from 'react';
-import {useTheme} from './index';
 import {StatusBar, StatusBarProps, Platform} from 'react-native';
-//import SystemNavigationBar from 'react-native-system-navigation-bar';
-type ParamProps = {
-  inverse?: boolean;
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
+
+type ThemeColors = {
+  primary: string;
+  secondary: string;
+  background: string;
+  card: string;
+  text: string;
+  border: string;
+};
+
+interface ScreenNavProp {
+  routeName?: any;
+  colors?: any;
+  theme?: any;
+  translucent?: boolean;
   statusColor?: string;
-  statusBaseLight?: boolean;
+  isBarLight?: boolean;
   navColor?: string;
-  navBaseLight?: boolean;
-};
+  isNavLight?: boolean;
+}
 
-const styleLight = 'light-content';
-const styleDark = 'dark-content';
-const inverseColor = 'transparent';
-const blackColor = 'black';
+interface StatusNavProp {
+  defaultColor: any;
+  defaultTheme: any;
+  translucent?: boolean;
+  statusColor?: string;
+  isBarLight?: boolean;
+  navColor?: string;
+  isNavLight?: boolean;
+}
 
-const useStatusNav = (params: ParamProps) => {
-  const {theme, colors} = useTheme();
-  const baseColor = colors.card;
-  const themeIsLight = theme === 'light';
-
-  let navColor = params?.navColor === undefined ? baseColor : blackColor;
-  let navStyle = params?.navBaseLight ? true : false;
-
-  let barColor =
-    params?.statusColor === undefined ? baseColor : params.statusColor;
-
-  let baseLight =
-    params?.statusBaseLight === undefined
-      ? themeIsLight
-      : params.statusBaseLight;
-
-  const defaultNav = () => {
-    console.log('>>>>>>>> DEFAULT' + theme);
-    //const currStatusStyle = baseLight ? styleDark : styleLight;
-    //navStyle = baseLight ? true : false;
-    // StatusBar.setTranslucent(false);
-    //StatusBar.setBarStyle(currStatusStyle);
-    StatusBar.setBackgroundColor(baseColor);
-    if (Platform.OS === 'android') {
-      // SystemNavigationBar.setNavigationColor(baseColor, !themeIsLight);
+class StatusNav {
+  static setScreenNav = (params?: ScreenNavProp) => {
+    const defaultColor = params?.colors as ThemeColors;
+    const defaultTheme = params?.theme;
+    if (
+      params?.routeName === 'AcquireARScreen' ||
+      params?.routeName === 'AcquireScreen'
+    ) {
+      StatusNav.setStatusNav({
+        defaultColor: defaultColor,
+        defaultTheme: defaultTheme,
+        translucent: true,
+      });
+    } else if (params?.routeName === 'AuthenticationScreen') {
+      StatusNav.setStatusNav({
+        defaultColor: defaultColor,
+        defaultTheme: defaultTheme,
+        statusColor: defaultColor.primary,
+        navColor: defaultColor.card,
+      });
+    } else if (params?.routeName === 'HomeScreen') {
+      StatusNav.setStatusNav({
+        defaultColor: defaultColor,
+        defaultTheme: defaultTheme,
+      });
     }
   };
-  const translucentNav = () => {
-    console.log('hree');
 
-    if (Platform.OS === 'android') {
-      //SystemNavigationBar.fullScreen(true);
-      //const result = SystemNavigationBar.setNavigationColor(
-      //   'hsla(110, 56%, 49%, 0.5)',
-      //   !themeIsLight,
-      // );
+  static setStatusNav = (params?: StatusNavProp) => {
+    const styleLight = 'light-content';
+    const styleDark = 'dark-content';
+    const translucentColor = 'translucent';
+    const blackColor = 'black';
+
+    const colors = params?.defaultColor;
+    const theme = params?.defaultTheme;
+
+    const baseColor = colors.card;
+    const themeIsLight = theme === 'light';
+    var navStyle = params?.isNavLight ? params.isNavLight : themeIsLight;
+    var barStyle = params?.isBarLight ? params.isBarLight : themeIsLight;
+    const barStyleType = {
+      styleType: barStyle ? styleDark : styleLight,
+    };
+
+    var navColor =
+      params?.navColor === undefined ? baseColor : params?.navColor;
+    var barColor =
+      params?.statusColor === undefined ? baseColor : params?.statusColor;
+
+    if (params?.translucent) {
+      navColor = translucentColor;
+      navStyle = false;
+      barStyleType.styleType = styleLight;
+      //StatusBar.setTranslucent(true);
+      StatusBar.setBackgroundColor('rgba(0,0,0,0.4)');
+    } else {
+      StatusBar.setTranslucent(false);
+      StatusBar.setBackgroundColor(barColor);
     }
-    //StatusBar.setBackgroundColor('rgba(0,0,0,0.2)');
+    StatusBar.setBarStyle(barStyleType.styleType as any);
+    if (Platform.OS === 'android') {
+      changeNavigationBarColor(navColor, navStyle, false);
+    }
   };
-  const leanBackNav = () => {};
-
-  React.useEffect(() => {
-    defaultNav();
-  }, []);
-
-  return {defaultNav, translucentNav, leanBackNav};
-};
-
-export default useStatusNav;
+}
+export default StatusNav;

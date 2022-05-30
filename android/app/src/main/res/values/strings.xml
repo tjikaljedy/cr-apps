@@ -2,7 +2,5 @@
     <string name="app_name">crazyrich</string>
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:statusBarColor">@color/colorSecondary</item>
-        <item name="android:navigationBarColor">@color/colorSecondary</item>
     </style>
 </resources>

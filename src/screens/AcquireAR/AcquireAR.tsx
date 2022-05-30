@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/core';
-import {Image, Animated, BackHandler, InteractionManager} from 'react-native';
+import {Image, Animated, InteractionManager} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {PressableOpacity} from 'react-native-pressable-opacity';
 import {ViroConstants} from '@viro-community/react-viro';
@@ -26,15 +26,10 @@ import {
 } from '@src/redux/slices/artSlice';
 import {selectSortedArts} from '@src/redux/combinedSelector';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
-import changeNavigationBarColor, {
-  showNavigationBar,
-  hideNavigationBar,
-} from 'react-native-navigation-bar-color';
+import {useStatusNav} from '@src/hooks';
 type AcquireARProps = {};
 
 const AcquireAR: React.FC<AcquireARProps> = () => {
-  const [isNavigationTransitionFinished, setIsNavigationTransitionFinished] =
-    React.useState(false);
   const dispatch = useAppDispatch();
   const {isPass} = React.useContext(PermissionContext);
   const {userToken} = React.useContext(AuthContext);
@@ -44,11 +39,6 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
 
   const fadeIn = React.useRef(new Animated.Value(0)).current;
   const fadeOut = React.useRef(new Animated.Value(1)).current;
-
-  const [selectedItem, setSelectdItem] = React.useState<ArtRowItem>();
-  React.useEffect(() => {
-    //changeNavigationBarColor('translucent', false, true);
-  }, []);
 
   React.useEffect(() => {
     dispatch<any>(fetchArtsAPI());
@@ -101,50 +91,10 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     dispatch(updateSelectedArt(item));
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const task = InteractionManager.runAfterInteractions(() => {});
-      return () => {
-        task.cancel();
-      };
-    }, []),
-  );
-
-  /*useFocusEffect(
-    React.useCallback(() => {
-      const task = InteractionManager.runAfterInteractions(() => {
-        setIsNavigationTransitionFinished(true);
-      });
-      return () => {
-        changeNavigationBarColor('blue', false, false);
-        task.cancel();
-
-        //changeNavigationBarColor('blue', false, false);
-      };
-    }, []),
-  );*/
-
-  //useFocusEffect(
-  //  React.useCallback(() => {
-  //    const onBackPress = () => {
-  //     return false;
-  //    };
-
-  //   BackHandler.addEventListener('hardwareBackPress', onBackPress);
-  //    return () =>
-  //      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-  //  }, [navigation]),
-  //);
-
-  //React.useEffect(() => {
-  //  navigation.addListener('beforeRemove', (e) => {});
-  //changeNavigationBarColor('blue', false, false);
-  // }, [navigation]);
-
   return (
-    <Container style={[styles.cameraContainer]}>
+    <Container style={[styles.acquireContainer]}>
       {isPass ? (
-        <Container style={[styles.cameraContainer]}>
+        <>
           <SnapCameraAR onInitialScene={_renderScreen} />
           <Container style={styles.topCenterRow}>
             {!planReady ? (
@@ -207,7 +157,15 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
           </Container>
           <Container style={styles.topRightRow}>
             <PressableOpacity style={[styles.button]} disabledOpacity={0.4}>
-              <Icon name="camera" useIonicons color="white" size={24} />
+              <Icon
+                name="camera"
+                useIonicons
+                color="white"
+                size={24}
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              />
             </PressableOpacity>
           </Container>
           <Container style={styles.bottomLeftRow}>
@@ -231,7 +189,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
               hasPagination={false}
             />
           </Container>
-        </Container>
+        </>
       ) : (
         <PermissionCamera />
       )}

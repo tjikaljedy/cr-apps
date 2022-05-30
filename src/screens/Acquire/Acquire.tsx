@@ -1,21 +1,18 @@
 import * as React from 'react';
 import {useNavigation} from '@react-navigation/native';
-
-import {useTheme} from '@src/hooks';
+import {useStatusNav} from '@src/hooks';
 import {useAppDispatch} from '@src/redux/useRedux';
 import {resetSelectionArts} from '@src/redux/slices/artSlice';
 import {Container, SnapCamera} from '@src/components/elements';
-
 import PermissionContext from '@src/context/permission-context';
 import {PermissionCamera} from '@src/components/elements/SnapCamera/PermissionCamera';
 import AuthContext from '@src/context/auth-context';
-import {profile} from '@src/data/mock-profile';
+
 import styles from './styles';
 
 type AcquireProps = {};
 
 const Acquire: React.FC<AcquireProps> = () => {
-  const {colors, theme} = useTheme();
   const dispatch = useAppDispatch();
   const {isPass} = React.useContext(PermissionContext);
   const navigation = useNavigation();
@@ -26,9 +23,6 @@ const Acquire: React.FC<AcquireProps> = () => {
     navigation.navigate('AcquireARScreen' as any);
   }, []);
 
-  React.useEffect(() => {
-    navigation.addListener('beforeRemove', (e) => {});
-  }, [navigation]);
   return (
     <Container style={styles.acquireContainer}>
       {isPass ? (

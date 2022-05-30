@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {ScrollView, SafeAreaView} from 'react-native';
+import {ScrollView} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import DeliveryTime from './DeliveryTime';
 import DeliveryStep from './DeliveryStep';
 import DriverInformation from './DriverInformation';

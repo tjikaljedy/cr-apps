@@ -1,7 +1,7 @@
-import { Text } from '@src/components/elements';
+import {Text} from '@src/components/elements';
 import * as React from 'react';
-import { I18nManager } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {I18nManager} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import styles from './styles';
 
 type DocumentationProps = {};

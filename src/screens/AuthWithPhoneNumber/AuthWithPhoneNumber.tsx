@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {SafeAreaView, View, ScrollView, Alert} from 'react-native';
+import {View, ScrollView, Alert} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {Text, TextField, Button, Dialog} from '@src/components/elements';
 import {useTheme} from '@src/hooks';
 import styles from './styles';

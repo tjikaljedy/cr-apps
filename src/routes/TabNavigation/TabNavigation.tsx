@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeStack from '../Stacks/HomeStack';
 import AccountStack from '../Stacks/AccountStack';
@@ -57,6 +56,7 @@ const TabNavigation: React.FC<TabNavigationProps> = () => {
   return (
     <Navigator
       initialRouteName="Home"
+      safeAreaInsets={{bottom: 0}}
       screenOptions={(props) => {
         const {
           route: {name: routeName},

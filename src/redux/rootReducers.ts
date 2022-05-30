@@ -5,7 +5,6 @@ import theme from './slices/themeSlice';
 import artSlice from './slices/artSlice';
 import portalSlice from './slices/portalSlice';
 import camera from './slices/cameraSlice';
-import statusnav from './slices/statusNavSlice';
 
 //Reducer
 const reducers = {
@@ -13,7 +12,6 @@ const reducers = {
   camera,
   artSlice,
   portalSlice,
-  statusnav,
 };
 
 const persistConfig = {

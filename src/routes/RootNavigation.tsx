@@ -1,10 +1,9 @@
 import React, {useContext} from 'react';
-import {Platform, InteractionManager} from 'react-native';
+import {Platform, InteractionManager, View, StatusBar} from 'react-native';
 import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-//import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import TabNavigation from '@src/routes/TabNavigation';
 import DishDetails from '@src/screens/DishDetails';
@@ -14,16 +13,13 @@ import AcquireAR from '@src/screens/AcquireAR';
 import AuthenticationStack from '@src/routes/Stacks/AuthenticationStack';
 import AuthContext from '@src/context/auth-context';
 import {useTheme} from '@src/hooks';
-//Test
-//import {initialDefault, fetchDefault} from '@src/redux/slices/statusNavSlice';
-//import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
+import StatusNav from '@src/hooks/useStatusNav';
+
 const RootStack = createStackNavigator();
 
 const RootNavigation = () => {
   //Default
-  const {colors, navTheme, theme} = useTheme();
-  //const dispatch = useAppDispatch();
-  //const statusNav = useAppSelector(fetchDefault);
+  const {colors, theme, navTheme} = useTheme();
   const {userToken} = useContext(AuthContext);
   const navigationRef = useNavigationContainerRef();
   const screenOptions =
@@ -32,41 +28,25 @@ const RootNavigation = () => {
           ...TransitionPresets.SlideFromRightIOS,
         }
       : {
-          ...TransitionPresets.ScaleFromCenterAndroid,
+          ...TransitionPresets.ModalTransition,
         };
-  /*React.useEffect(() => {
-    dispatch(
-      initialDefault({
-        default: {themeColor: colors.card, themeMode: theme},
-        current: {themeColor: colors.card, themeMode: theme},
-      }),
-    );
-  }, [colors]);*/
 
-  /*React.useEffect(() => {
-    const routeName = navigationRef.current?.getCurrentRoute();
-    console.log('>>> 1 ' + routeName);
-    if (routeName?.name === 'AcquireARScreen') {
-      changeNavigationBarColor('translucent', true, false);
-    }
-    if (routeName?.name === 'AuthenticationScreen') {
-      changeNavigationBarColor(colors.card, true, true);
-    } else {
-      changeNavigationBarColor(colors.card, true, true);
-    }
-  }, []);*/
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={navTheme}
-      onUnhandledAction={() => {
-        console.log('ddddd');
-      }}
       onStateChange={() => {
-        const routeName = navigationRef.current?.getCurrentRoute();
-        console.log('>>> 2 ' + routeName);
-        if (routeName?.name === 'AcquireARScreen') {
-          //changeNavigationBarColor('translucent', true, false);
+        const route = navigationRef.current?.getCurrentRoute();
+        if (
+          route?.name === 'AcquireARScreen' ||
+          route?.name === 'AcquireScreen' ||
+          route?.name === 'HomeScreen'
+        ) {
+          StatusNav.setScreenNav({
+            routeName: route?.name,
+            colors: colors,
+            theme: theme,
+          });
         }
       }}>
       <RootStack.Navigator screenOptions={screenOptions}>

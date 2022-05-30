@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {SafeAreaView, ScrollView, Image, View} from 'react-native';
+import {ScrollView, Image, View} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {Container, SearchBar, Divider} from '@src/components/elements';
 import styles from './styles';
 import {promotions} from '@src/data/mock-promotion';

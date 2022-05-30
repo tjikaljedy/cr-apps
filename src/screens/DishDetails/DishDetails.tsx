@@ -1,11 +1,6 @@
 import * as React from 'react';
-import {
-  Animated,
-  SafeAreaView,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import {Animated, View, KeyboardAvoidingView, Platform} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {useTheme, useNavigation} from '@react-navigation/native';
 import {Text, Button} from '@src/components/elements';
 import {mockDishDetails, Dish} from '@src/data/mock-places';

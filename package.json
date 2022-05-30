@@ -1,6 +1,6 @@
 {
   "name": "crazyrich",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -25,8 +25,10 @@
     "@viro-community/react-viro": "2.22.0",
     "accounting": "^0.4.1",
     "dayjs": "^1.10.4",
+    "install": "^0.13.0",
     "lottie-ios": "^3.2.3",
     "lottie-react-native": "^5.1.1",
+    "npm": "^8.11.0",
     "react": "^17.0.2",
     "react-native": "^0.67.4",
     "react-native-confirmation-code-field": "^6.5.1",
@@ -35,7 +37,6 @@
     "react-native-maps": "^0.30.1",
     "react-native-modal": "^13.0.1",
     "react-native-navigation-bar-color": "^2.0.1",
-    "react-native-pager-view": "^5.4.15",
     "react-native-permissions": "^3.3.1",
     "react-native-pressable-opacity": "^1.0.10",
     "react-native-ratings": "^7.4.0",

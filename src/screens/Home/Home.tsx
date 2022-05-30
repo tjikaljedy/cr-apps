@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {useFocusEffect, useScrollToTop} from '@react-navigation/native';
-import {ScrollView, InteractionManager, SafeAreaView} from 'react-native';
-import {LoadingIndicator, Container} from '@src/components/elements';
+import {ScrollView, InteractionManager} from 'react-native';
+import {SafeAreaView} from 'react-native';
+import {LoadingIndicator} from '@src/components/elements';
 import PopularPlaces from './PopularPlaces';
 import RecommendedPlaces from './RecommendedPlaces';
 import MerchantCampaigns from './MerchantCampaigns';
@@ -17,7 +18,6 @@ const Home: React.FC<HomeProps> = () => {
     React.useState(false);
   const scrollViewRef = React.useRef(null);
   useScrollToTop(scrollViewRef);
-
   useFocusEffect(
     React.useCallback(() => {
       const task = InteractionManager.runAfterInteractions(() => {

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {SafeAreaView, View, ScrollView, Alert} from 'react-native';
+import {View, ScrollView, Alert} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {Text, Button} from '@src/components/elements';
 import {
   CodeField,

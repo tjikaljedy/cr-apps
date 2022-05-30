@@ -1,5 +1,17 @@
 ### React-Native Notice
 
+### NOTE for React-Navigation
+
+    <Stack.Navigator
+      initialRouteName="HomeScreen"
+      screenOptions={{
+        headerStatusBarHeight: 0, <----
+      }}>
+
+    <Navigator
+      initialRouteName="Home"
+      safeAreaInsets={{bottom: 0}} <----
+
 ### Starting 2022-05-10
 
 The main concern in develop in react-native is to maintain dependancy version the packages.

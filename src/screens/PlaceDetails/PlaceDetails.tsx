@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {Animated, SafeAreaView, View} from 'react-native';
+import {Animated, View} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {useTheme} from '@src/hooks';
 import {Container, Text} from '@src/components/elements';
 import HeadingInformation from './HeadingInformation';

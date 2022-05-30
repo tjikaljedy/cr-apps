@@ -36,6 +36,7 @@ const Stories: React.FC<StoriesProps> = () => {
 
   const _onCameraSelectMode = React.useCallback((item: any) => {
     setIsModalVisible(false);
+
     return item.value === 'ar'
       ? navigation.navigate('AcquireARScreen' as any)
       : navigation.navigate('AcquireScreen' as any);

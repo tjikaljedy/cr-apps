@@ -1,10 +1,10 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
   headerTitleContainer: {
     flexDirection: 'row',
     alignSelf: 'flex-start',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   headerLeftContainer: {
     flexDirection: 'row',

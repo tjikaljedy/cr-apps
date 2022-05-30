@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {SafeAreaView, View, ScrollView, Alert, Image} from 'react-native';
+import {View, ScrollView, Alert, Image} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {Text, TextField, Button} from '@src/components/elements';
 import {useTheme} from '@src/hooks';
 import styles from './styles';
@@ -38,7 +39,7 @@ const Login: React.FC<LoginProps> = () => {
             style={styles.avatar}
           />
           <Text isBold isHeadingTitle>
-            Welcome! Vu Nguyen
+            Welcome! Users
           </Text>
           <Text isSecondary hasMargin>
             Please enter your password to use our services

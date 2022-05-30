@@ -1,1 +1,2 @@
-export {default as useTheme} from './useThemeColors';
+import {default as useTheme} from './useThemeColors';
+export {useTheme};

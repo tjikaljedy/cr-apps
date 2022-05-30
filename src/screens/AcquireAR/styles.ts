@@ -14,6 +14,7 @@ export default StyleSheet.create({
   },
   screenNavContainer: {
     flex: 1,
+    backgroundColor: 'black',
   },
   cameraContainer: {
     flex: 1,
