@@ -96,7 +96,7 @@ export const selectePortal = (state: RootState) =>
 export const fetchPortalPlanStatus = (state: RootState) =>
   state.portalSlice.planReady;
 
-export const {selectAll: selectPortals} = portalsAdapter.getSelectors(
+export const {selectAll: selectAllPortals} = portalsAdapter.getSelectors(
   (state: RootState) => state.portalSlice,
 );
 export default reducer;

@@ -20,7 +20,7 @@ import {
 
 const faker = require('@faker-js/faker');
 interface IProps {
-  modelIDProps: PortalRowItem;
+  portalIDProps: PortalRowItem;
   bitMask: number;
   onLoadCallback: (uuid: any, state: any) => void;
   onClickStateCallback?: () => void;
@@ -43,7 +43,7 @@ export default class PortalItemRender extends React.PureComponent<
   state: IState = {
     position: [0, -10, -1],
     rotation: [0, 0, 0],
-    scale: this.props.modelIDProps?.scale,
+    scale: this.props.portalIDProps?.scale,
     nodeIsVisible: false,
     shouldBillboard: true,
     insidePortal: true,
@@ -150,17 +150,17 @@ export default class PortalItemRender extends React.PureComponent<
   };
 
   _onPortalEnter = () => {
-    //this.state.insidePortal = true;
-    this.setState({
-      insidePortal: true,
-    });
+    this.state.insidePortal = true;
+    //this.setState({
+    //  insidePortal: true,
+    //});
   };
 
   _onPortalExit = () => {
-    //this.state.insidePortal = false;
-    this.setState({
-      insidePortal: false,
-    });
+    this.state.insidePortal = false;
+    //this.setState({
+    //  insidePortal: false,
+    //});
   };
 
   _setInitialPlacement = (position: any) => {
@@ -192,13 +192,13 @@ export default class PortalItemRender extends React.PureComponent<
     });
   };
 
-  _renderPortalInside(modelItem: PortalRowItem) {
+  _renderPortalInside(portalItem: PortalRowItem) {
     var uuid = faker.datatype.uuid();
     var portalSource: any =
-      this.props.modelIDProps.portal360Image != undefined &&
-      this.props.modelIDProps.portal360Image != null
-        ? this.props.modelIDProps.portal360Image
-        : modelItem.portal360Image;
+      this.props.portalIDProps.portal360Image != undefined &&
+      this.props.portalIDProps.portal360Image != null
+        ? this.props.portalIDProps.portal360Image
+        : portalItem.portal360Image;
     if (
       this._is360Photo(portalSource, portalSource.width, portalSource.height)
     ) {
@@ -294,7 +294,7 @@ export default class PortalItemRender extends React.PureComponent<
   }
 
   render() {
-    var modelItem = this.props.modelIDProps as PortalRowItem;
+    var portalItem = this.props.portalIDProps as PortalRowItem;
     var uuid = faker.datatype.uuid();
     const transformBehaviors: any = {};
     if (this.state.shouldBillboard) {
@@ -332,11 +332,11 @@ export default class PortalItemRender extends React.PureComponent<
 
         <ViroPortalScene
           key={`ms3-${uuid}`}
-          position={modelItem.position}
+          position={portalItem.position}
           onRotate={this._onRotate}
           onPinch={this._onPinch}
           passable={true}
-          scale={modelItem.portalScale}
+          scale={portalItem.portalScale}
           onClickState={() => {}}
           onPortalEnter={this._onPortalEnter}
           onPortalExit={this._onPortalExit}>
@@ -345,14 +345,14 @@ export default class PortalItemRender extends React.PureComponent<
               key={`ms5-${uuid}`}
               lightReceivingBitMask={this.props.bitMask | 1}
               shadowCastingBitMask={this.props.bitMask}
-              type={modelItem.frameType as any}
-              source={modelItem.obj as any}
-              resources={modelItem.resources}
+              type={portalItem.frameType as any}
+              source={portalItem.obj as any}
+              resources={portalItem.resources}
               onLoadStart={this._onObjectLoadStart(uuid)}
               onLoadEnd={this._onObjectLoadEnd(uuid)}
             />
           </ViroPortal>
-          {this._renderPortalInside(modelItem)}
+          {this._renderPortalInside(portalItem)}
         </ViroPortalScene>
       </ViroNode>
     );

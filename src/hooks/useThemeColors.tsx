@@ -15,11 +15,11 @@ type ThemeColors = {
 export default function () {
   const colorScheme = Appearance.getColorScheme();
   const defaultTheme = useSelector(
-    (state: {theme: ThemeState}) => state.theme.theme,
+    (state: {themeSlice: ThemeState}) => state.themeSlice.theme,
   );
 
   const isSystemTheme = useSelector(
-    (state: {theme: ThemeState}) => state.theme.useSystemTheme,
+    (state: {themeSlice: ThemeState}) => state.themeSlice.useSystemTheme,
   ) as boolean;
 
   const currentTheme = !isSystemTheme ? defaultTheme : colorScheme;

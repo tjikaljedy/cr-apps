@@ -26,15 +26,14 @@ import {
   fetchPlanStatus,
   updateSelectedArt,
   updatePlanStatus,
+  selectAllArts,
 } from '@src/redux/slices/artSlice';
 import {
   fetchPortalsAPI,
   updateSelectedPortal,
+  selectAllPortals,
 } from '@src/redux/slices/portalSlice';
-import {
-  selectSortedArts,
-  selectSortedPortals,
-} from '@src/redux/combinedSelector';
+import {updateRenderType} from '@src/redux/slices/renderSlice';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
 type AcquireARProps = {};
 
@@ -42,15 +41,15 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   const dispatch = useAppDispatch();
   const {isPass} = React.useContext(PermissionContext);
   const {userToken} = React.useContext(AuthContext);
-  const allArts = useAppSelector(selectSortedArts);
-  const allPortals = useAppSelector(selectSortedPortals);
-
+  //Arts and Portal
+  const allArts = useAppSelector(selectAllArts);
   const planReady = useAppSelector(fetchPlanStatus);
-  const navigation = useNavigation();
+  const allPortals = useAppSelector(selectAllPortals);
 
+  //Navigatiion and button
+  const navigation = useNavigation();
   const fadeIn = React.useRef(new Animated.Value(0)).current;
   const fadeOut = React.useRef(new Animated.Value(1)).current;
-
   const [actionButton, setActionButton] = React.useState<
     'arts' | 'portals' | 'camera'
   >('arts');
@@ -106,6 +105,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
 
   const _onItemArtPress = (item: ArtRowItem) => {
     dispatch(updateSelectedArt(item));
+    dispatch(updateRenderType({modelRender: actionButton}));
   };
 
   //PORTALS
@@ -122,6 +122,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
 
   const _onItemPortalPress = (item: PortalRowItem) => {
     dispatch(updateSelectedPortal(item));
+    dispatch(updateRenderType({modelRender: actionButton}));
   };
 
   return (
@@ -230,8 +231,10 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
 
           <Container style={[styles.bottomRow]}>
             <Carousel
-              data={allArts}
-              renderContent={_renderItemArts}
+              data={actionButton === 'arts' ? allArts : allPortals}
+              renderContent={
+                actionButton === 'arts' ? _renderItemArts : _renderItemPortals
+              }
               itemWidth={60}
               enableSnap={false}
               hasPagination={false}

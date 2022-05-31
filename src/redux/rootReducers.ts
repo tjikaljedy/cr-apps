@@ -1,23 +1,25 @@
 import {combineReducers} from '@reduxjs/toolkit';
 import {persistCombineReducers} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import theme from './slices/themeSlice';
+import themeSlice from './slices/themeSlice';
 import artSlice from './slices/artSlice';
 import portalSlice from './slices/portalSlice';
-import camera from './slices/cameraSlice';
+import cameraSlice from './slices/cameraSlice';
+import renderSlice from './slices/renderSlice';
 
 //Reducer
 const reducers = {
-  theme,
-  camera,
+  themeSlice,
+  cameraSlice,
   artSlice,
   portalSlice,
+  renderSlice,
 };
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['theme', 'camera'],
+  whitelist: ['themeSlice', 'cameraSlice'],
 };
 
 export const persistedRootReducer = persistCombineReducers(

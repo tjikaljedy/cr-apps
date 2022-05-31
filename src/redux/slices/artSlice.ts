@@ -85,7 +85,7 @@ export const fetchAllSelectionArts = (state: RootState) =>
 export const selectedArt = (state: RootState) => state.artSlice.selectedArt;
 export const fetchPlanStatus = (state: RootState) => state.artSlice.planReady;
 
-export const {selectAll: selectArts} = artsAdapter.getSelectors(
+export const {selectAll: selectAllArts} = artsAdapter.getSelectors(
   (state: RootState) => state.artSlice,
 );
 export default reducer;

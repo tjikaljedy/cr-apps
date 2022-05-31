@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {RootState} from '../useRedux';
 
-const sliceName = 'camera';
+const sliceName = 'cameraSlice';
 
 const slice = createSlice({
   name: sliceName,
@@ -24,7 +24,7 @@ const slice = createSlice({
 });
 
 export const {changeDefault} = slice.actions;
-export const fetchDefault = (state: RootState) => state.camera;
+export const fetchDefault = (state: RootState) => state.cameraSlice;
 
 export default slice.reducer;
 

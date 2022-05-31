@@ -18,6 +18,7 @@ const mapStateToProps = (state: RootState) => ({
   selectedArt: state.artSlice.selectedArt,
   allPortals: state.portalSlice.allPortals,
   selectedPortal: state.portalSlice.selectedPortal,
+  currentType: state.renderSlice.modelRender,
 });
 const mapDispatchToProps = () => ({});
 
@@ -33,7 +34,8 @@ class ReviewScene extends React.PureComponent<
   IState
 > {
   private arSceneRef: React.RefObject<typeof ViroARScene> = React.createRef();
-  private renderedObjects: any = [];
+  private artObjects: any = [];
+  private portalObjects: any = [];
   private defaultBitMask = 2;
   _onLoadCallback = (uuid: any, state: any) => {};
   _onHitTestMethod = (callback: any) => {
@@ -50,50 +52,49 @@ class ReviewScene extends React.PureComponent<
 
   //ARTS
   _renderModels = () => {
-    const modelItem = this.props.selectedArt as ArtRowItem;
-    if (modelItem) {
-      var uuid = faker.datatype.uuid();
-      var itemBitMask = Math.pow(2, this.defaultBitMask);
-      this.renderedObjects.push(
-        <ArtItemRender
-          key={uuid}
-          modelIDProps={modelItem}
-          bitMask={itemBitMask}
-          onLoadCallback={this._onLoadCallback}
-          hitTestMethod={this._onHitTestMethod}
-        />,
-      );
-      this.defaultBitMask++;
+    if (this.props.currentType === 'arts') {
+      const modelItem = this.props.selectedArt as ArtRowItem;
+      if (modelItem) {
+        var uuid = faker.datatype.uuid();
+        var itemBitMask = Math.pow(2, this.defaultBitMask);
+        this.artObjects.push(
+          <ArtItemRender
+            key={uuid}
+            modelIDProps={modelItem}
+            bitMask={itemBitMask}
+            onLoadCallback={this._onLoadCallback}
+            hitTestMethod={this._onHitTestMethod}
+          />,
+        );
+        this.defaultBitMask++;
+      }
     }
-
-    return this.renderedObjects;
+    return this.artObjects;
   };
 
   //PORTALS
   _renderPortals = () => {
-    const modelItem = this.props.selectedPortal as PortalRowItem;
-    if (modelItem) {
-      console.log(modelItem);
-      var uuid = faker.datatype.uuid();
-      var itemBitMask = Math.pow(2, this.defaultBitMask);
-      this.renderedObjects.push(
-        <PortalItemRender
-          key={uuid}
-          modelIDProps={modelItem}
-          bitMask={itemBitMask}
-          onLoadCallback={this._onLoadCallback}
-          hitTestMethod={this._onHitTestMethod}
-        />,
-      );
-      this.defaultBitMask++;
+    if (this.props.currentType === 'portals') {
+      const portalItem = this.props.selectedPortal as PortalRowItem;
+      if (portalItem) {
+        var uuid = faker.datatype.uuid();
+        var itemBitMask = Math.pow(2, this.defaultBitMask);
+        this.portalObjects.push(
+          <PortalItemRender
+            key={uuid}
+            portalIDProps={portalItem}
+            bitMask={itemBitMask}
+            onLoadCallback={this._onLoadCallback}
+            hitTestMethod={this._onHitTestMethod}
+          />,
+        );
+        this.defaultBitMask++;
+      }
     }
-
-    return this.renderedObjects;
+    return this.portalObjects;
   };
 
   render() {
-    let models = this._renderModels();
-    let portals = this._renderPortals();
     return (
       <ViroARScene
         ref={this.arSceneRef as any}
@@ -109,8 +110,8 @@ class ReviewScene extends React.PureComponent<
           color="#ffffff"
           intensity={250}
         />
-        {models}
-        {portals}
+        {this._renderModels()}
+        {this._renderPortals()}
       </ViroARScene>
     );
   }
