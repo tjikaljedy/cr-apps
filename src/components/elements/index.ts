@@ -20,6 +20,7 @@ import LoadingIndicator from './LoadingIndicator';
 import DateTimePicker from './DateTimePicker';
 import SnapCamera from './SnapCamera';
 import SnapCameraAR from './SnapCameraAR';
+import ButtonGroup from './ButtonGroup';
 export {
   Button,
   Touchable,
@@ -43,4 +44,5 @@ export {
   DateTimePicker,
   SnapCamera,
   SnapCameraAR,
+  ButtonGroup,
 };

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {useStatusNav} from '@src/hooks';
 import {useAppDispatch} from '@src/redux/useRedux';
 import {resetSelectionArts} from '@src/redux/slices/artSlice';
 import {Container, SnapCamera} from '@src/components/elements';
@@ -21,6 +20,10 @@ const Acquire: React.FC<AcquireProps> = () => {
   const _onSwitchToAR = React.useCallback((type?: any, options?: any) => {
     dispatch(resetSelectionArts());
     navigation.navigate('AcquireARScreen' as any);
+    /*navigation.reset({
+      index: 0,
+      routes: [{name: 'AcquireARScreen'} as any],
+    });*/
   }, []);
 
   return (

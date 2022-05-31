@@ -10,6 +10,7 @@ import {
   ViroSpotLight,
   ViroPortalScene,
   ViroPortal,
+  ViroMaterials,
 } from '@viro-community/react-viro';
 import {
   PortalRowItem,
@@ -358,3 +359,20 @@ export default class PortalItemRender extends React.PureComponent<
     );
   }
 }
+
+ViroMaterials.createMaterials({
+  shadowCatcher: {
+    writesToDepthBuffer: false,
+    readsFromDepthBuffer: false,
+    diffuseColor: '#ff9999',
+  },
+  ground: {
+    lightingModel: 'Lambert',
+    cullMode: 'None',
+    shininess: 2.0,
+    diffuseColor: '#ff999900',
+  },
+  theatre: {
+    diffuseTexture: require('@src/assets/portals/360_waikiki.jpg'),
+  },
+});

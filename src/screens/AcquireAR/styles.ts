@@ -48,7 +48,7 @@ export default StyleSheet.create({
     position: 'absolute',
     alignSelf: 'flex-start',
     bottom: SAFE_AREA_PADDING.paddingBottom + 100,
-    left: SAFE_AREA_PADDING.paddingLeft,
+    left: SAFE_AREA_PADDING.paddingLeft + 10,
     backgroundColor: 'transparent',
   },
   bottomRightRow: {
@@ -58,6 +58,24 @@ export default StyleSheet.create({
     bottom: SAFE_AREA_PADDING.paddingBottom + 100,
     right: SAFE_AREA_PADDING.paddingRight,
     backgroundColor: 'transparent',
+  },
+  buttonChecked: {
+    marginBottom: CONTENT_SPACING,
+    width: BUTTON_SIZE,
+    height: BUTTON_SIZE,
+    borderRadius: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonDefault: {
+    marginBottom: CONTENT_SPACING,
+    width: BUTTON_SIZE,
+    height: BUTTON_SIZE,
+    borderRadius: 10,
+    backgroundColor: 'rgba(140, 140, 140, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   squre: {
     marginBottom: CONTENT_SPACING,

@@ -4,7 +4,6 @@ import {Image, Animated} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {PressableOpacity} from 'react-native-pressable-opacity';
 import {ViroConstants} from '@viro-community/react-viro';
-import SnapCarousel from 'react-native-snap-carousel';
 //ViroTrackingStateConstants or ViroConstants
 //Default
 import PermissionContext from '@src/context/permission-context';
@@ -15,6 +14,7 @@ import {
   SnapCameraAR,
   Carousel,
   Icon,
+  ButtonGroup,
 } from '@src/components/elements';
 import AuthContext from '@src/context/auth-context';
 import ReviewScene from './ReviewScene';
@@ -35,6 +35,7 @@ import {
 } from '@src/redux/slices/portalSlice';
 import {updateRenderType} from '@src/redux/slices/renderSlice';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
+import {ButtonGrpOption} from '@src/components/elements/ButtonGroup/ButtonGroup';
 type AcquireARProps = {};
 
 const AcquireAR: React.FC<AcquireARProps> = () => {
@@ -53,6 +54,23 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   const [actionButton, setActionButton] = React.useState<
     'arts' | 'portals' | 'camera'
   >('arts');
+
+  const actionModelOptions: ButtonGrpOption[] = [
+    {
+      name: 'portals',
+      value: 'portals',
+      iconElement: (
+        <Icon name="dock-window" useMaterialicons color="white" size={30} />
+      ),
+    },
+    {
+      name: 'arts',
+      value: 'arts',
+      iconElement: (
+        <Icon name="cube-outline" useMaterialicons color="white" size={30} />
+      ),
+    },
+  ];
 
   React.useEffect(() => {
     dispatch<any>(fetchArtsAPI());
@@ -189,45 +207,30 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
               </Animated.View>
             )}
           </Container>
-          <Container style={styles.topRightRow}>
+          <Container style={styles.bottomRightRow}>
             <PressableOpacity
-              style={[styles.button]}
+              style={[styles.squre]}
               disabledOpacity={0.4}
               onPress={() => {
-                navigation.goBack();
+                navigation.navigate('AcquireScreen' as any);
+                //navigation.reset({
+                //  index: 0,
+                //  routes: [{name: 'AcquireScreen'} as any],
+                //});
               }}>
               <Icon name="camera" useIonicons color="white" size={24} />
             </PressableOpacity>
           </Container>
-          <Container style={[styles.bottomLeftRow]}>
-            <PressableOpacity
-              style={[styles.button]}
-              disabledOpacity={0.4}
-              onPress={() => {
-                setActionButton('portals');
-              }}>
-              <Icon
-                name="dock-window"
-                useMaterialicons
-                color="white"
-                size={28}
-              />
-            </PressableOpacity>
-            <PressableOpacity
-              style={[styles.button]}
-              activeOpacity={0.4}
-              disabledOpacity={0.4}
-              onPress={() => {
-                setActionButton('arts');
-              }}>
-              <Icon
-                name="cube-outline"
-                useMaterialicons
-                color="white"
-                size={30}
-              />
-            </PressableOpacity>
-          </Container>
+          <ButtonGroup
+            checkedStyle={styles.buttonChecked}
+            defaultStyle={styles.buttonDefault}
+            containerStyle={styles.bottomLeftRow}
+            data={actionModelOptions}
+            defaultValue={'arts'}
+            onItemPressed={(item: ButtonGrpOption) => {
+              setActionButton(item.value as any);
+            }}
+          />
 
           <Container style={[styles.bottomRow]}>
             <Carousel
