@@ -189,9 +189,16 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
   render() {
     var modelItem = this.props.modelIDProps as ArtRowItem;
     var uuid = faker.datatype.uuid();
+    const transformBehaviors: any = {};
+    if (this.state.shouldBillboard) {
+      transformBehaviors.transformBehaviors = this.state.shouldBillboard
+        ? 'billboardY'
+        : [];
+    }
     return (
       <ViroNode
-        key={uuid}
+        {...transformBehaviors}
+        key={`ms1-${uuid}`}
         ref={this.arNodeRef}
         visible={this.state.nodeIsVisible}
         position={this.state.position}
@@ -200,7 +207,7 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
         onDrag={() => {}}
         dragType="FixedToWorld">
         <ViroSpotLight
-          key={`vs-${uuid}`}
+          key={`ms2-${uuid}`}
           ref={this.arSpotRef}
           intensity={modelItem.lighting_mode == 'IBL' ? 100 : 1000}
           innerAngle={5}
@@ -229,9 +236,9 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
           shadowOpacity={0.9}
         />
 
-        <ViroNode key={`vn-${uuid}`} position={modelItem.position as any}>
+        <ViroNode key={`ms3-${uuid}`} position={modelItem.position as any}>
           <Viro3DObject
-            key={`vo-${uuid}`}
+            key={`ms4-${uuid}`}
             animation={{...modelItem.animation, run: true}}
             lightReceivingBitMask={this.props.bitMask | 1}
             shadowCastingBitMask={this.props.bitMask}
@@ -249,7 +256,7 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
           />
         </ViroNode>
         <ViroQuad
-          key={`vq-${uuid}`}
+          key={`ms5-${uuid}`}
           rotation={[-90, 0, 0]}
           position={[0, -0.001, 0]}
           width={

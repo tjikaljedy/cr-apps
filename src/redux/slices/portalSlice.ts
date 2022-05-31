@@ -49,7 +49,7 @@ const slice = createSlice({
     selectedPortal: undefined,
   } as PortalState),
   reducers: {
-    updatePlanStatus(
+    updatePortalPlanStatus(
       state: PortalState,
       {payload: {planReady}}: PortalPayload,
     ) {
@@ -84,16 +84,19 @@ const slice = createSlice({
 //Sample from ts-rn
 const {actions, reducer} = slice;
 
-export const {updatePlanStatus, updateSelectedPortal, resetSelectionPortals} =
-  actions;
-export const fetchAllSelectionArts = (state: RootState) =>
+export const {
+  updatePortalPlanStatus,
+  updateSelectedPortal,
+  resetSelectionPortals,
+} = actions;
+export const fetchAllSelectionPortals = (state: RootState) =>
   state.portalSlice.allPortals;
-export const selectedArt = (state: RootState) =>
+export const selectePortal = (state: RootState) =>
   state.portalSlice.selectedPortal;
-export const fetchPlanStatus = (state: RootState) =>
+export const fetchPortalPlanStatus = (state: RootState) =>
   state.portalSlice.planReady;
 
-export const {selectAll: selectArts} = portalsAdapter.getSelectors(
+export const {selectAll: selectPortals} = portalsAdapter.getSelectors(
   (state: RootState) => state.portalSlice,
 );
 export default reducer;

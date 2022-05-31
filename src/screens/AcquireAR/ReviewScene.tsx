@@ -6,23 +6,25 @@ import {
   ViroSpotLight,
 } from '@viro-community/react-viro';
 import {ArtRowItem} from '@src/redux/ArtRowItem';
+import {PortalRowItem} from '@src/redux/PortalRowItem';
 import ArtItemRender from '@src/components/elements/SnapCameraAR/ArtItemRender';
+import PortalItemRender from '@src/components/elements/SnapCameraAR/PortalItemRender';
 import {connect} from 'react-redux';
 import {RootState} from '@src/redux/useRedux';
 const faker = require('@faker-js/faker');
 
 const mapStateToProps = (state: RootState) => ({
   allArts: state.artSlice.allArts,
-  selectArt: state.artSlice.selectedArt,
+  selectedArt: state.artSlice.selectedArt,
+  allPortals: state.portalSlice.allPortals,
+  selectedPortal: state.portalSlice.selectedPortal,
 });
 const mapDispatchToProps = () => ({});
 
 interface IProps {
   onInitialized: (state: any, reason: any) => void;
 }
-interface IState {
-  modelItems: any;
-}
+interface IState {}
 
 class ReviewScene extends React.PureComponent<
   ReturnType<typeof mapStateToProps> &
@@ -46,8 +48,9 @@ class ReviewScene extends React.PureComponent<
       });
   };
 
+  //ARTS
   _renderModels = () => {
-    const modelItem = this.props.selectArt as ArtRowItem;
+    const modelItem = this.props.selectedArt as ArtRowItem;
     if (modelItem) {
       var uuid = faker.datatype.uuid();
       var itemBitMask = Math.pow(2, this.defaultBitMask);
@@ -66,8 +69,31 @@ class ReviewScene extends React.PureComponent<
     return this.renderedObjects;
   };
 
+  //PORTALS
+  _renderPortals = () => {
+    const modelItem = this.props.selectedPortal as PortalRowItem;
+    if (modelItem) {
+      console.log(modelItem);
+      var uuid = faker.datatype.uuid();
+      var itemBitMask = Math.pow(2, this.defaultBitMask);
+      this.renderedObjects.push(
+        <PortalItemRender
+          key={uuid}
+          modelIDProps={modelItem}
+          bitMask={itemBitMask}
+          onLoadCallback={this._onLoadCallback}
+          hitTestMethod={this._onHitTestMethod}
+        />,
+      );
+      this.defaultBitMask++;
+    }
+
+    return this.renderedObjects;
+  };
+
   render() {
     let models = this._renderModels();
+    let portals = this._renderPortals();
     return (
       <ViroARScene
         ref={this.arSceneRef as any}
@@ -84,6 +110,7 @@ class ReviewScene extends React.PureComponent<
           intensity={250}
         />
         {models}
+        {portals}
       </ViroARScene>
     );
   }

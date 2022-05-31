@@ -4,6 +4,7 @@ import {Image, Animated} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {PressableOpacity} from 'react-native-pressable-opacity';
 import {ViroConstants} from '@viro-community/react-viro';
+import SnapCarousel from 'react-native-snap-carousel';
 //ViroTrackingStateConstants or ViroConstants
 //Default
 import PermissionContext from '@src/context/permission-context';
@@ -19,13 +20,21 @@ import AuthContext from '@src/context/auth-context';
 import ReviewScene from './ReviewScene';
 import styles from './styles';
 import {ArtRowItem} from '@src/redux/ArtRowItem';
+import {PortalRowItem} from '@src/redux/PortalRowItem';
 import {
   fetchArtsAPI,
   fetchPlanStatus,
   updateSelectedArt,
   updatePlanStatus,
 } from '@src/redux/slices/artSlice';
-import {selectSortedArts} from '@src/redux/combinedSelector';
+import {
+  fetchPortalsAPI,
+  updateSelectedPortal,
+} from '@src/redux/slices/portalSlice';
+import {
+  selectSortedArts,
+  selectSortedPortals,
+} from '@src/redux/combinedSelector';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
 type AcquireARProps = {};
 
@@ -34,14 +43,21 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   const {isPass} = React.useContext(PermissionContext);
   const {userToken} = React.useContext(AuthContext);
   const allArts = useAppSelector(selectSortedArts);
+  const allPortals = useAppSelector(selectSortedPortals);
+
   const planReady = useAppSelector(fetchPlanStatus);
   const navigation = useNavigation();
 
   const fadeIn = React.useRef(new Animated.Value(0)).current;
   const fadeOut = React.useRef(new Animated.Value(1)).current;
 
+  const [actionButton, setActionButton] = React.useState<
+    'arts' | 'portals' | 'camera'
+  >('arts');
+
   React.useEffect(() => {
     dispatch<any>(fetchArtsAPI());
+    dispatch<any>(fetchPortalsAPI());
   }, [dispatch]);
 
   React.useEffect(() => {
@@ -76,9 +92,10 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     return <ReviewScene onInitialized={_onInitialized} />;
   };
 
-  const _renderItem = (item: ArtRowItem) => {
+  //ARTS
+  const _renderItemArts = (item: ArtRowItem) => {
     return (
-      <PressableOpacity onPress={() => _onItemPress(item)}>
+      <PressableOpacity onPress={() => _onItemArtPress(item)}>
         <Image
           style={[styles.artImage, {borderColor: 'white'}]}
           source={item.icon_img}
@@ -87,8 +104,24 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     );
   };
 
-  const _onItemPress = (item: ArtRowItem) => {
+  const _onItemArtPress = (item: ArtRowItem) => {
     dispatch(updateSelectedArt(item));
+  };
+
+  //PORTALS
+  const _renderItemPortals = (item: PortalRowItem) => {
+    return (
+      <PressableOpacity onPress={() => _onItemPortalPress(item)}>
+        <Image
+          style={[styles.artImage, {borderColor: 'white'}]}
+          source={item.icon_img}
+        />
+      </PressableOpacity>
+    );
+  };
+
+  const _onItemPortalPress = (item: PortalRowItem) => {
+    dispatch(updateSelectedPortal(item));
   };
 
   return (
@@ -156,22 +189,36 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
             )}
           </Container>
           <Container style={styles.topRightRow}>
-            <PressableOpacity style={[styles.button]} disabledOpacity={0.4}>
-              <Icon
-                name="camera"
-                useIonicons
-                color="white"
-                size={24}
-                onPress={() => {
-                  navigation.goBack();
-                }}
-              />
+            <PressableOpacity
+              style={[styles.button]}
+              disabledOpacity={0.4}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <Icon name="camera" useIonicons color="white" size={24} />
             </PressableOpacity>
           </Container>
-          <Container style={styles.bottomLeftRow}>
+          <Container style={[styles.bottomLeftRow]}>
             <PressableOpacity
-              style={[styles.button, {backgroundColor: `rgba(0,0,0,0.4)`}]}
-              disabledOpacity={0.4}>
+              style={[styles.button]}
+              disabledOpacity={0.4}
+              onPress={() => {
+                setActionButton('portals');
+              }}>
+              <Icon
+                name="dock-window"
+                useMaterialicons
+                color="white"
+                size={28}
+              />
+            </PressableOpacity>
+            <PressableOpacity
+              style={[styles.button]}
+              activeOpacity={0.4}
+              disabledOpacity={0.4}
+              onPress={() => {
+                setActionButton('arts');
+              }}>
               <Icon
                 name="cube-outline"
                 useMaterialicons
@@ -180,10 +227,11 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
               />
             </PressableOpacity>
           </Container>
+
           <Container style={[styles.bottomRow]}>
             <Carousel
               data={allArts}
-              renderContent={_renderItem}
+              renderContent={_renderItemArts}
               itemWidth={60}
               enableSnap={false}
               hasPagination={false}

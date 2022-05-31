@@ -150,17 +150,17 @@ export default class PortalItemRender extends React.PureComponent<
   };
 
   _onPortalEnter = () => {
-    this.state.insidePortal = true;
-    //this.setState({
-    //  insidePortal:true,
-    //});
+    //this.state.insidePortal = true;
+    this.setState({
+      insidePortal: true,
+    });
   };
 
   _onPortalExit = () => {
-    this.state.insidePortal = false;
-    //this.setState({
-    //  insidePortal:false,
-    //});
+    //this.state.insidePortal = false;
+    this.setState({
+      insidePortal: false,
+    });
   };
 
   _setInitialPlacement = (position: any) => {
@@ -261,10 +261,10 @@ export default class PortalItemRender extends React.PureComponent<
             scale={[0.5, 0.5, 0.5]}
             source={require('@src/assets/portals/gallery/artgallery3.vrx')}
             resources={[
-              require('@src/assets/portals/gallery_projector_diffuse.png'),
-              require('@src/assets/portals/gallery_projector_specular.png'),
-              require('@src/assets/portals/gallery_walls_diffuse.png'),
-              require('@src/assets/portals/gallery_walls_specular.png'),
+              require('@src/assets/portals/gallery/art_gallery_projector_diffuse.png'),
+              require('@src/assets/portals/gallery/art_gallery_projector_specular.png'),
+              require('@src/assets/portals/gallery/art_gallery_walls_diffuse.png'),
+              require('@src/assets/portals/gallery/art_gallery_walls_specular.png'),
             ]}
             type="VRX"
           />,
@@ -285,7 +285,7 @@ export default class PortalItemRender extends React.PureComponent<
         viewArray.push(
           <Viro360Image
             key={`dt8-${uuid}`}
-            source={require('@src/assets/portals/360_waikki.jpg')}
+            source={require('@src/assets/portals/360_waikiki.jpg')}
           />,
         );
       }
@@ -296,9 +296,17 @@ export default class PortalItemRender extends React.PureComponent<
   render() {
     var modelItem = this.props.modelIDProps as PortalRowItem;
     var uuid = faker.datatype.uuid();
+    const transformBehaviors: any = {};
+    if (this.state.shouldBillboard) {
+      transformBehaviors.transformBehaviors = this.state.shouldBillboard
+        ? 'billboardY'
+        : [];
+    }
+
     return (
       <ViroNode
-        key={uuid}
+        {...transformBehaviors}
+        key={`ms1-${uuid}`}
         ref={this.arNodeRef}
         visible={this.state.nodeIsVisible}
         position={this.state.position}
@@ -306,7 +314,7 @@ export default class PortalItemRender extends React.PureComponent<
         rotation={this.state.rotation}
         onDrag={() => {}}>
         <ViroSpotLight
-          key={`vs-${uuid}`}
+          key={`ms2-${uuid}`}
           ref={this.arSpotRef}
           innerAngle={5}
           outerAngle={20}
@@ -323,7 +331,7 @@ export default class PortalItemRender extends React.PureComponent<
         />
 
         <ViroPortalScene
-          key={`vps-${uuid}`}
+          key={`ms3-${uuid}`}
           position={modelItem.position}
           onRotate={this._onRotate}
           onPinch={this._onPinch}
@@ -332,9 +340,9 @@ export default class PortalItemRender extends React.PureComponent<
           onClickState={() => {}}
           onPortalEnter={this._onPortalEnter}
           onPortalExit={this._onPortalExit}>
-          <ViroPortal key={`vpr-${uuid}`}>
+          <ViroPortal key={`ms4-${uuid}`}>
             <Viro3DObject
-              key={`vo-${uuid}`}
+              key={`ms5-${uuid}`}
               lightReceivingBitMask={this.props.bitMask | 1}
               shadowCastingBitMask={this.props.bitMask}
               type={modelItem.frameType as any}
@@ -344,6 +352,7 @@ export default class PortalItemRender extends React.PureComponent<
               onLoadEnd={this._onObjectLoadEnd(uuid)}
             />
           </ViroPortal>
+          {this._renderPortalInside(modelItem)}
         </ViroPortalScene>
       </ViroNode>
     );

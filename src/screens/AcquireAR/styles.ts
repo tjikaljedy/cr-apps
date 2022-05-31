@@ -44,7 +44,7 @@ export default StyleSheet.create({
     paddingBottom: 5,
   },
   bottomLeftRow: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     position: 'absolute',
     alignSelf: 'flex-start',
     bottom: SAFE_AREA_PADDING.paddingBottom + 100,
@@ -77,6 +77,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   artItemContainer: {
     flexShrink: 1,
     flexDirection: 'column',
