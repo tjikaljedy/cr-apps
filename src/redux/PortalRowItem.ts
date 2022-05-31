@@ -5,6 +5,11 @@ export const LOADING = 'LOADING';
 export const LOAD_ERROR = 'ERROR';
 export const LOADED = 'LOADED';
 export const POSITION_OFFSET = 0.05;
+export const PS_TYPE_VIDEO = 'Video';
+export const PS_TYPE_360_VIDEO = '360_Video';
+export const PS_TYPE_PHOTO = 'Photo';
+export const PS_TYPE_360_PHOTO = '360_Photo';
+
 export type ITEM_TYPE = 'PORTAL';
 
 export interface Image360 {

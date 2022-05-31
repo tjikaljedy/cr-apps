@@ -18,7 +18,6 @@ interface IProps {
 }
 interface IState {
   position: any;
-  lastPosition: any;
   rotation: any;
   scale: any;
   nodeIsVisible: boolean;
@@ -31,7 +30,6 @@ interface IState {
 export default class ArtItemRender extends React.PureComponent<IProps, IState> {
   state: IState = {
     position: [0, -10, -1],
-    lastPosition: [0, -10, -1],
     rotation: [0, 0, 0],
     scale: this.props.modelIDProps?.scale,
     nodeIsVisible: false,
@@ -48,8 +46,7 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
   };
 
   _onItemClicked = (position: any, source: any) => {
-    //this.state.lastPosition = [position[0], position[1], position[2]];
-    //this.setState({position: [position[0], position[1], position[2]]});
+    console.log(this.state.rotation);
   };
 
   _onPinch = (pinchState: any, scaleFactor: number, source: any) => {
@@ -165,6 +162,7 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
       this.setState({
         rotation: [0, yRotation, 0],
         shouldBillboard: false,
+        nodeIsVisible: true,
       });
     });
   };
@@ -178,10 +176,11 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
   _onObjectLoadEnd = (uuid: any) => {
     return () => {
       this.props.onLoadCallback(uuid, LOADED);
+      //by Tjikal
       if (!this.state.nodeIsVisible) {
-        this.setState({
-          nodeIsVisible: true,
-        });
+        //this.setState({
+        // nodeIsVisible: true,
+        //});
         this.props.hitTestMethod(this._onARHitTestResults);
       }
     };

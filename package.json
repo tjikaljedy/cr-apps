@@ -24,7 +24,6 @@
     "@reduxjs/toolkit": "^1.8.1",
     "@viro-community/react-viro": "2.22.0",
     "accounting": "^0.4.1",
-    "create-react-class": "^15.7.0",
     "dayjs": "^1.10.4",
     "install": "^0.13.0",
     "lottie-ios": "^3.2.3",
