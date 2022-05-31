@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {useNavigation, useFocusEffect} from '@react-navigation/core';
-import {Image, Animated, InteractionManager} from 'react-native';
+import {useNavigation} from '@react-navigation/core';
+import {Image, Animated} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {PressableOpacity} from 'react-native-pressable-opacity';
 import {ViroConstants} from '@viro-community/react-viro';
+//ViroTrackingStateConstants or ViroConstants
 //Default
 import PermissionContext from '@src/context/permission-context';
 import {PermissionCamera} from '@src/components/elements/SnapCamera/PermissionCamera';
@@ -15,7 +16,7 @@ import {
   Icon,
 } from '@src/components/elements';
 import AuthContext from '@src/context/auth-context';
-import ReviewScene from './scene/ReviewScene';
+import ReviewScene from './ReviewScene';
 import styles from './styles';
 import {ArtRowItem} from '@src/redux/ArtRowItem';
 import {

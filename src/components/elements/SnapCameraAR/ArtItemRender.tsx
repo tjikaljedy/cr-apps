@@ -18,6 +18,7 @@ interface IProps {
 }
 interface IState {
   position: any;
+  lastPosition: any;
   rotation: any;
   scale: any;
   nodeIsVisible: boolean;
@@ -25,12 +26,12 @@ interface IState {
   runAnimation: boolean;
   showParticles: boolean;
   itemClickedDown: boolean;
-  lastPosition: any;
 }
 
 export default class ArtItemRender extends React.PureComponent<IProps, IState> {
-  /*state: IState = {
+  state: IState = {
     position: [0, -10, -1],
+    lastPosition: [0, -10, -1],
     rotation: [0, 0, 0],
     scale: this.props.modelIDProps?.scale,
     nodeIsVisible: false,
@@ -38,52 +39,51 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
     runAnimation: true,
     showParticles: true,
     itemClickedDown: false,
-    lastPosition: [0, -10, -1],
-  };*/
-
-  constructor(props: IProps | Readonly<IProps>) {
-    super(props);
-    this.state = {
-      position: [0, -10, -1],
-      rotation: [0, 0, 0],
-      scale: props.modelIDProps?.scale,
-      nodeIsVisible: false,
-      shouldBillboard: true,
-      runAnimation: true,
-      showParticles: true,
-      itemClickedDown: false,
-      lastPosition: [0, -10, -1],
-    };
-    this._distance = this._distance.bind(this);
-    this._onARHitTestResults = this._onARHitTestResults.bind(this);
-    this._onDrag = this._onDrag.bind(this);
-    this._onObjectLoadEnd = this._onObjectLoadEnd.bind(this);
-    this._onObjectLoadStart = this._onObjectLoadStart.bind(this);
-    this._onPinch = this._onPinch.bind(this);
-    this._onRotate = this._onRotate.bind(this);
-    this._setInitialPlacement = this._setInitialPlacement.bind(this);
-    this._updateInitialRotation = this._updateInitialRotation.bind(this);
-  }
-
+  };
   private arNodeRef: React.RefObject<typeof ViroNode> = React.createRef();
   private arSpotRef: React.RefObject<typeof ViroSpotLight> = React.createRef();
 
   _onDrag = (dragToPos: any, source: any) => {
-    //this.setState({lastPosition: dragToPos});
+    // this.setState({lastPosition: [dragToPos[0], dragToPos[1], dragToPos[2]]});
   };
 
-  _onRotate = (rotateState: any, rotationFactor: any, source: any) => {
+  _onItemClicked = (position: any, source: any) => {
+    //this.state.lastPosition = [position[0], position[1], position[2]];
+    //this.setState({position: [position[0], position[1], position[2]]});
+  };
+
+  _onPinch = (pinchState: any, scaleFactor: number, source: any) => {
+    var newScale = this.state.scale.map((x: number) => {
+      return x * scaleFactor;
+    });
+    if (pinchState == 3) {
+      this.state.scale = newScale;
+      //this.setState({
+      //  scale: newScale,
+      //});
+      return;
+    }
+    this.arNodeRef.current.setNativeProps({scale: newScale});
+    //this.spotLight.setNativeProps({shadowFarZ: 6 * newScale[0]});
+  };
+
+  _onRotate = (rotateState: any, rotationFactor: number, source: any) => {
     if (rotateState == 3) {
-      this.setState({
+      this.state.rotation = [
+        this.state.rotation[0],
+        this.state.rotation[1] + rotationFactor,
+        this.state.rotation[2],
+      ];
+      /*this.setState({
         rotation: [
           this.state.rotation[0],
           this.state.rotation[1] + rotationFactor,
           this.state.rotation[2],
         ],
-      });
+      });*/
       return;
     }
-    this.arNodeRef.current?.setNativeProps({
+    this.arNodeRef.current.setNativeProps({
       rotation: [
         this.state.rotation[0],
         this.state.rotation[1] + rotationFactor,
@@ -91,23 +91,6 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
       ],
     });
   };
-
-  _onPinch(pinchState: any, scaleFactor: any, source: any) {
-    var newScale = this.state.scale.map((x: any) => {
-      return x * scaleFactor;
-    });
-
-    if (pinchState == 3) {
-      this.setState({
-        scale: newScale,
-      });
-
-      return;
-    }
-
-    this.arNodeRef.current?.setNativeProps({scale: newScale});
-    //this.spotLight.setNativeProps({shadowFarZ: 6 * newScale[0]});
-  }
 
   _distance = (vectorOne: any, vectorTwo: any) => {
     const distanceData = Math.sqrt(
@@ -168,7 +151,7 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
   };
 
   _updateInitialRotation = () => {
-    this.arNodeRef.current?.getTransformAsync().then((retDict: any) => {
+    this.arNodeRef.current.getTransformAsync().then((retDict: any) => {
       let rotation = retDict.rotation;
       let absX = Math.abs(rotation[0]);
       let absZ = Math.abs(rotation[2]);
@@ -253,12 +236,12 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
             animation={{...modelItem.animation, run: true}}
             lightReceivingBitMask={this.props.bitMask | 1}
             shadowCastingBitMask={this.props.bitMask}
-            type={'VRX'}
+            type={modelItem.type as any}
             materials={'pbr'}
             source={modelItem.obj as any}
             resources={modelItem.resources}
             onClickState={() => {}}
-            onClick={() => {}}
+            onClick={this._onItemClicked}
             onError={() => {}}
             onRotate={this._onRotate}
             onPinch={this._onPinch}

@@ -56,8 +56,9 @@ https://github.com/PSPatel5/react-native-boilerplate
 
 ## Others
 
-ViroTrackingStateConstants
 "@viro-community/react-viro": "file:../rn-repo/@viro-community/react-viro/viro-community-react-viro-2.23.0.tgz",
+
+## ViroTrackingStateConstants
 
 - source={{
                  uri: `https://crazyrich-app.herokuapp.com/art/icecreamman_anim/icecreamman_anim_pbr.vrx`,
