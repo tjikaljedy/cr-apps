@@ -13,8 +13,8 @@ const PopularDishes: React.FC<PopularDishesProps> = () => {
 
   const _onButtonActionPressed = () => {
     navigation.navigate(
-      'PlaceListScreen' as any,
-      {title: "What's Popular Here"} as any,
+      'PlaceListScreen' as never,
+      {title: "What's Popular Here"} as never,
     );
   };
 

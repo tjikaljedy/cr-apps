@@ -13,7 +13,10 @@ const HotDeals: React.FC<HotDealsProps> = () => {
   const navigation = useNavigation();
 
   const _onButtonActionPressed = () => {
-    navigation.navigate('PlaceListScreen' as any, {title: 'Hot Deals'} as any);
+    navigation.navigate(
+      'PlaceListScreen' as never,
+      {title: 'Hot Deals'} as never,
+    );
   };
 
   const _onPlaceItemPressed = () => {

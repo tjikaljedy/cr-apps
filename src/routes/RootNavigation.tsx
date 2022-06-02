@@ -8,8 +8,7 @@ import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import TabNavigation from '@src/routes/TabNavigation';
 import DishDetails from '@src/screens/DishDetails';
 import SearchDishes from '@src/screens/SearchDishes';
-import Acquire from '@src/screens/Acquire';
-import AcquireAR from '@src/screens/AcquireAR';
+import Acquire from '@src/routes/Stacks/AcquireStack';
 import AuthenticationStack from '@src/routes/Stacks/AuthenticationStack';
 import AuthContext from '@src/context/auth-context';
 import {useTheme} from '@src/hooks';
@@ -37,17 +36,11 @@ const RootNavigation = () => {
       theme={navTheme}
       onStateChange={() => {
         const route = navigationRef.current?.getCurrentRoute();
-        if (
-          route?.name === 'AcquireARScreen' ||
-          route?.name === 'AcquireScreen' ||
-          route?.name === 'HomeScreen'
-        ) {
-          StatusNav.setScreenNav({
-            routeName: route?.name,
-            colors: colors,
-            theme: theme,
-          });
-        }
+        StatusNav.setScreenNav({
+          routeName: route?.name,
+          colors: colors,
+          theme: theme,
+        });
       }}>
       <RootStack.Navigator screenOptions={screenOptions}>
         {userToken ? (
@@ -102,23 +95,13 @@ const RootNavigation = () => {
         />
         <RootStack.Screen
           options={{
-            headerShown: false,
             headerTransparent: true,
-            headerLeft: () => null,
+            headerStatusBarHeight: 0,
+            title: '',
             headerBackTitleVisible: false,
           }}
           name="AcquireScreen"
           component={Acquire}
-        />
-        <RootStack.Screen
-          options={{
-            headerShown: false,
-            headerTransparent: true,
-            headerLeft: () => null,
-            headerBackTitleVisible: false,
-          }}
-          name="AcquireARScreen"
-          component={AcquireAR}
         />
       </RootStack.Navigator>
     </NavigationContainer>

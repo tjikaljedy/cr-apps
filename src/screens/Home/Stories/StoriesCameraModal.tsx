@@ -1,5 +1,7 @@
 import * as React from 'react';
+import {PlatformColor} from 'react-native';
 import {Dialog, RadioButton} from '@src/components/elements';
+
 import {RadioOption} from '@src/components/elements/RadioButton/RadioButton';
 import {fetchDefault} from '@store/slices/cameraSlice';
 import {useAppSelector} from '@src/redux/useRedux';
@@ -7,6 +9,7 @@ import {useAppSelector} from '@src/redux/useRedux';
 type StoriesCameraModalProps = {
   isVisible: boolean;
   hideModal: () => void;
+  onModalHide?: (item: any) => void;
   onItemPressed: (item: any) => void;
 };
 
@@ -24,6 +27,7 @@ const cameraOptions: RadioOption[] = [
 const StoriesCameraMoodal: React.FC<StoriesCameraModalProps> = ({
   isVisible,
   hideModal,
+  onModalHide,
   onItemPressed,
 }) => {
   const defaultValue = useAppSelector(fetchDefault);
@@ -34,8 +38,10 @@ const StoriesCameraMoodal: React.FC<StoriesCameraModalProps> = ({
 
   return (
     <Dialog
+      hideModalContentWhileAnimating={true}
       title="Pick Camera Mode"
       isVisible={isVisible}
+      onModalHide={onModalHide as never}
       onBackdropPress={hideModal}>
       <RadioButton data={cameraOptions} onItemPressed={onItemPressed} />
     </Dialog>

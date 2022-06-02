@@ -13,8 +13,10 @@ export const AppReviewConfig = {
 };
 
 export const CAPTURE_BUTTON_SIZE = 58;
+export const CAPTURE_BUTTON_PADDING = 103;
 export const MAX_ZOOM_FACTOR = 20;
 export const CONTENT_SPACING = 15;
+
 export const SAFE_AREA_PADDING = {
   paddingLeft: StaticSafeAreaInsets.safeAreaInsetsLeft + CONTENT_SPACING,
   paddingTop: StaticSafeAreaInsets.safeAreaInsetsTop + CONTENT_SPACING,

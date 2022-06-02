@@ -19,6 +19,7 @@ type HomeStackParamList = {
   PlaceListScreen: {
     title?: string;
   };
+  AcquireScreen: undefined;
 };
 type HomeStackProps = {} & ScreenNavigationProps;
 
@@ -97,6 +98,7 @@ const HomeStack: React.FC<HomeStackProps> = ({navigation}) => {
         <Stack.Screen
           options={({route: {params}}) => {
             return {
+              tabBarVisible: false,
               headerTitle: params?.title || 'Places',
             };
           }}

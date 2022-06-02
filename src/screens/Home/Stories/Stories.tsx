@@ -15,42 +15,42 @@ import {fetchDefault} from '@store/slices/cameraSlice';
 import {useAppSelector} from '@src/redux/useRedux';
 import {mockStories, Story} from '@src/data/mock-stories';
 import {profile} from '@src/data/mock-profile';
-import styles from './styles';
 import StoriesCameraModal from './StoriesCameraModal';
+import styles from './styles';
 
 //Default
 type StoriesProps = {};
 
 const Stories: React.FC<StoriesProps> = () => {
   const navigation = useNavigation();
-  const defaultValue = useAppSelector(fetchDefault);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
-
+  const defaultValue = useAppSelector(fetchDefault);
   const {
     colors: {primary},
   } = useTheme();
 
-  const _hideModal = () => {
-    setIsModalVisible(false);
-  };
+  const _onAddItemPressed = React.useCallback((name?: string) => {
+    return () => {
+      setIsModalVisible(true);
+    };
+  }, []);
 
   const _onCameraSelectMode = React.useCallback((item: any) => {
     setIsModalVisible(false);
-
     return item.value === 'ar'
-      ? navigation.navigate('AcquireARScreen' as any)
-      : navigation.navigate('AcquireScreen' as any);
+      ? navigation.navigate(
+          'AcquireScreen' as never,
+          {screen: 'AcquireAR'} as never,
+        )
+      : navigation.navigate(
+          'AcquireScreen' as never,
+          {screen: 'AcquireDevice'} as never,
+        );
   }, []);
 
-  const _onAddItemPressed = React.useCallback(
-    (name?: string) => {
-      return () =>
-        defaultValue.value === 'prompt'
-          ? setIsModalVisible(true)
-          : _onCameraSelectMode(defaultValue);
-    },
-    [defaultValue],
-  );
+  const _hideModal = () => {
+    setIsModalVisible(false);
+  };
 
   const _renderProfileStory = () => {
     return (
@@ -82,6 +82,11 @@ const Stories: React.FC<StoriesProps> = () => {
 
   return (
     <Container style={styles.storiesContainer}>
+      <StoriesCameraModal
+        isVisible={isModalVisible}
+        hideModal={_hideModal}
+        onItemPressed={_onCameraSelectMode}
+      />
       <Container style={styles.storiesAddItemContainer}>
         <Touchable onPress={_onAddItemPressed()}>
           <Container style={[styles.storiesAddItem, {borderColor: primary}]}>
@@ -107,11 +112,6 @@ const Stories: React.FC<StoriesProps> = () => {
           hasPagination={false}
         />
       </Container>
-      <StoriesCameraModal
-        isVisible={isModalVisible}
-        hideModal={_hideModal}
-        onItemPressed={_onCameraSelectMode}
-      />
     </Container>
   );
 };

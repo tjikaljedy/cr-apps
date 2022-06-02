@@ -30,14 +30,17 @@ interface StatusNavProp {
   navColor?: string;
   isNavLight?: boolean;
 }
+export const blackColor = 'black';
+export const translucentColor = 'translucent';
 
 class StatusNav {
   static setScreenNav = (params?: ScreenNavProp) => {
     const defaultColor = params?.colors as ThemeColors;
     const defaultTheme = params?.theme;
+    console.log(params?.routeName);
     if (
-      params?.routeName === 'AcquireARScreen' ||
-      params?.routeName === 'AcquireScreen'
+      params?.routeName === 'AcquireAR' ||
+      params?.routeName === 'AcquireDevice'
     ) {
       StatusNav.setStatusNav({
         defaultColor: defaultColor,
@@ -62,8 +65,6 @@ class StatusNav {
   static setStatusNav = (params?: StatusNavProp) => {
     const styleLight = 'light-content';
     const styleDark = 'dark-content';
-    const translucentColor = 'translucent';
-    const blackColor = 'black';
 
     const colors = params?.defaultColor;
     const theme = params?.defaultTheme;

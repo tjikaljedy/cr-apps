@@ -13,7 +13,7 @@ const BasketSummary: React.FC<BasketSummaryProps> = () => {
   const navigation = useNavigation();
 
   const _onViewBasketButtonPressed = () => {
-    navigation.navigate('CheckoutScreen');
+    navigation.navigate('CheckoutScreen' as any);
   };
 
   return (

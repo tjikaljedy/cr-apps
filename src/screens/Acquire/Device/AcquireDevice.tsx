@@ -8,13 +8,13 @@ import {PermissionCamera} from '@src/components/elements/SnapCamera/PermissionCa
 import AuthContext from '@src/context/auth-context';
 
 import styles from './styles';
+import {ScreenNavigationProps} from '@src/routes/Stacks/types';
 
-type AcquireProps = {};
-
-const Acquire: React.FC<AcquireProps> = () => {
+type AcquireDeviceProps = {} & ScreenNavigationProps;
+const AcquireDevice: React.FC<AcquireDeviceProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
   const {isPass} = React.useContext(PermissionContext);
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
   const {userToken} = React.useContext(AuthContext);
 
   const _onSwitchToAR = React.useCallback((type?: any, options?: any) => {
@@ -37,4 +37,4 @@ const Acquire: React.FC<AcquireProps> = () => {
   );
 };
 
-export default Acquire;
+export default AcquireDevice;

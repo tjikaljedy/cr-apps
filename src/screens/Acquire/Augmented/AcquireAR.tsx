@@ -15,6 +15,7 @@ import {
   Carousel,
   Icon,
   ButtonGroup,
+  Text,
 } from '@src/components/elements';
 import AuthContext from '@src/context/auth-context';
 import ReviewScene from './ReviewScene';
@@ -36,6 +37,7 @@ import {
 import {updateRenderType} from '@src/redux/slices/renderSlice';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
 import {ButtonGrpOption} from '@src/components/elements/ButtonGroup/ButtonGroup';
+import {RecordButton} from '@src/components/elements/SnapCameraAR/RecordButton';
 type AcquireARProps = {};
 
 const AcquireAR: React.FC<AcquireARProps> = () => {
@@ -103,6 +105,12 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
       tackingNormal = true;
     }
     dispatch(updatePlanStatus({planReady: tackingNormal}));
+  };
+
+  const _renderRecord = () => {
+    return (
+      <RecordButton enabled={true} style={styles.bottomRowControlLeftCenter} />
+    );
   };
 
   const _renderScreen = () => {
@@ -207,32 +215,40 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
               </Animated.View>
             )}
           </Container>
-          <Container style={styles.bottomRightRow}>
-            <PressableOpacity
-              style={[styles.squre]}
-              disabledOpacity={0.4}
-              onPress={() => {
-                navigation.navigate('AcquireScreen' as any);
-                //navigation.reset({
-                //  index: 0,
-                //  routes: [{name: 'AcquireScreen'} as any],
-                //});
-              }}>
-              <Icon name="camera" useIonicons color="white" size={24} />
-            </PressableOpacity>
-          </Container>
-          <ButtonGroup
-            checkedStyle={styles.buttonChecked}
-            defaultStyle={styles.buttonDefault}
-            containerStyle={styles.bottomLeftRow}
-            data={actionModelOptions}
-            defaultValue={'arts'}
-            onItemPressed={(item: ButtonGrpOption) => {
-              setActionButton(item.value as any);
-            }}
-          />
-
           <Container style={[styles.bottomRow]}>
+            <Container style={[styles.bottomRowControl]}>
+              <Container style={[styles.bottomRowControlLeft]}>
+                <ButtonGroup
+                  checkedStyle={styles.buttonChecked}
+                  defaultStyle={styles.buttonDefault}
+                  containerStyle={styles.bottomRowControlLeftLeft}
+                  data={actionModelOptions}
+                  defaultValue={'arts'}
+                  onItemPressed={(item: ButtonGrpOption) => {
+                    setActionButton(item.value as any);
+                  }}
+                />
+              </Container>
+              <Container style={[styles.bottomRowControlCenter]}>
+                {_renderRecord()}
+              </Container>
+              <Container style={[styles.bottomRowControlRight]}>
+                <Container style={styles.bottomRowControlLeftRight}>
+                  <PressableOpacity
+                    style={[styles.squre]}
+                    disabledOpacity={0.4}
+                    onPress={() => {
+                      navigation.navigate('AcquireScreen' as any);
+                      //navigation.reset({
+                      //  index: 0,
+                      //  routes: [{name: 'AcquireScreen'} as any],
+                      //});
+                    }}>
+                    <Icon name="camera" useIonicons color="white" size={24} />
+                  </PressableOpacity>
+                </Container>
+              </Container>
+            </Container>
             <Carousel
               data={actionButton === 'arts' ? allArts : allPortals}
               renderContent={
