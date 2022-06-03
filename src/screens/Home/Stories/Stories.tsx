@@ -23,30 +23,43 @@ type StoriesProps = {};
 
 const Stories: React.FC<StoriesProps> = () => {
   const navigation = useNavigation();
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
   const defaultValue = useAppSelector(fetchDefault);
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
   const {
     colors: {primary},
   } = useTheme();
 
-  const _onAddItemPressed = React.useCallback((name?: string) => {
-    return () => {
-      setIsModalVisible(true);
-    };
-  }, []);
+  const _onAddItemPressed = React.useCallback(
+    (name?: any) => {
+      return () => {
+        defaultValue.value === 'prompt'
+          ? setIsModalVisible(true)
+          : _onRoute(defaultValue.value);
+      };
+    },
+    [defaultValue],
+  );
 
-  const _onCameraSelectMode = React.useCallback((item: any) => {
-    setIsModalVisible(false);
-    return item.value === 'ar'
-      ? navigation.navigate(
-          'AcquireScreen' as never,
-          {screen: 'AcquireAR'} as never,
-        )
-      : navigation.navigate(
-          'AcquireScreen' as never,
-          {screen: 'AcquireDevice'} as never,
-        );
-  }, []);
+  const _onRoute = (value: any) => {
+    if (value === 'ar') {
+      navigation.navigate(
+        'AcquireScreen' as never,
+        {screen: 'AcquireAR'} as never,
+      );
+    } else {
+      navigation.navigate(
+        'AcquireScreen' as never,
+        {screen: 'AcquireDevice'} as never,
+      );
+    }
+  };
+
+  const _onCameraSelectMode = async (item: any) => {
+    setTimeout(() => {
+      setIsModalVisible(false);
+    }, 500);
+    _onRoute(item.value);
+  };
 
   const _hideModal = () => {
     setIsModalVisible(false);

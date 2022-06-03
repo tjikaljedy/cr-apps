@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useNavigation} from '@react-navigation/core';
-import {Image, Animated} from 'react-native';
+import {Image, Animated, BackHandler} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {PressableOpacity} from 'react-native-pressable-opacity';
 import {ViroConstants} from '@viro-community/react-viro';
@@ -15,7 +15,6 @@ import {
   Carousel,
   Icon,
   ButtonGroup,
-  Text,
 } from '@src/components/elements';
 import AuthContext from '@src/context/auth-context';
 import ReviewScene from './ReviewScene';
@@ -41,6 +40,10 @@ import {RecordButton} from '@src/components/elements/SnapCameraAR/RecordButton';
 type AcquireARProps = {};
 
 const AcquireAR: React.FC<AcquireARProps> = () => {
+  BackHandler.addEventListener('hardwareBackPress', function () {
+    return true;
+  });
+
   const dispatch = useAppDispatch();
   const {isPass} = React.useContext(PermissionContext);
   const {userToken} = React.useContext(AuthContext);
@@ -153,6 +156,16 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
 
   return (
     <Container style={[styles.acquireContainer]}>
+      <Container style={styles.topLeftRow}>
+        <PressableOpacity
+          style={[styles.circle]}
+          disabledOpacity={0.4}
+          onPress={() => {
+            navigation.navigate('HomeScreen' as never);
+          }}>
+          <Icon name="close" useIonicons color="white" size={28} />
+        </PressableOpacity>
+      </Container>
       {isPass ? (
         <>
           <SnapCameraAR onInitialScene={_renderScreen} />
@@ -238,11 +251,10 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
                     style={[styles.squre]}
                     disabledOpacity={0.4}
                     onPress={() => {
-                      navigation.navigate('AcquireScreen' as any);
-                      //navigation.reset({
-                      //  index: 0,
-                      //  routes: [{name: 'AcquireScreen'} as any],
-                      //});
+                      navigation.navigate(
+                        'AcquireScreen' as never,
+                        {screen: 'AcquireDevice'} as never,
+                      );
                     }}>
                     <Icon name="camera" useIonicons color="white" size={24} />
                   </PressableOpacity>

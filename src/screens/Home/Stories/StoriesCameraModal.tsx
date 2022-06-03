@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {PlatformColor} from 'react-native';
 import {Dialog, RadioButton} from '@src/components/elements';
-
 import {RadioOption} from '@src/components/elements/RadioButton/RadioButton';
-import {fetchDefault} from '@store/slices/cameraSlice';
-import {useAppSelector} from '@src/redux/useRedux';
 
 type StoriesCameraModalProps = {
   isVisible: boolean;
@@ -30,12 +26,6 @@ const StoriesCameraMoodal: React.FC<StoriesCameraModalProps> = ({
   onModalHide,
   onItemPressed,
 }) => {
-  const defaultValue = useAppSelector(fetchDefault);
-
-  React.useEffect(() => {
-    isVisible = defaultValue.value === 'prompt';
-  }, [isVisible]);
-
   return (
     <Dialog
       hideModalContentWhileAnimating={true}

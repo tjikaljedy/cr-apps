@@ -43,7 +43,8 @@ import Icon from '../Icon';
 
 type SnapCameraProps = {
   children?: React.ReactNode;
-  onSwitchToAR?: () => void;
+  onSwitchToAR?: React.ReactNode;
+  onGalleryPickup?: React.ReactNode;
 };
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
@@ -55,6 +56,7 @@ Reanimated.addWhitelistedNativeProps({
 const SnapCamera: React.FC<SnapCameraProps> = ({
   children,
   onSwitchToAR,
+  onGalleryPickup,
   ...rest
 }) => {
   const navigation = useNavigation();
@@ -188,35 +190,35 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
     [isPressingButton],
   );
   // Camera callbacks
-  const onError = React.useCallback((error: CameraRuntimeError) => {
+  const _onError = React.useCallback((error: CameraRuntimeError) => {
     console.error(error);
   }, []);
   //
-  const onInitialized = React.useCallback(() => {
+  const _onInitialized = React.useCallback(() => {
     console.log('Camera initialized!');
     setIsCameraInitialized(true);
   }, []);
   //
-  const onMediaCaptured = React.useCallback(
+  const _onMediaCaptured = React.useCallback(
     (media: PhotoFile | VideoFile, type: 'photo' | 'video') => {
       console.log(`Media captured! ${JSON.stringify(media)}`);
     },
     [navigation],
   );
   //
-  const onFlipCameraPressed = React.useCallback(() => {
+  const _onFlipCameraPressed = React.useCallback(() => {
     setCameraPosition((p) => (p === 'back' ? 'front' : 'back'));
   }, []);
   //
-  const onFlashPressed = React.useCallback(() => {
+  const _onFlashPressed = React.useCallback(() => {
     setFlash((f) => (f === 'off' ? 'on' : 'off'));
   }, []);
   //#endregion
 
   //#region Tap Gesture
-  const onDoubleTap = React.useCallback(() => {
-    onFlipCameraPressed();
-  }, [onFlipCameraPressed]);
+  const _onDoubleTap = React.useCallback(() => {
+    _onFlipCameraPressed();
+  }, [_onFlipCameraPressed]);
   //#endregion
 
   //#region Effects
@@ -277,10 +279,6 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
     [],
   );
 
-  const _onGalleryPickup = React.useCallback((type?: any, options?: any) => {
-    // ImagePicker.launchImageLibrary({mediaType: 'mixed'}, setResponse);
-  }, []);
-
   React.useEffect(() => {
     navigation.addListener('beforeRemove', (e) => {
       setIsCameraInitialized(false);
@@ -298,7 +296,7 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
             onGestureEvent={onPinchGesture}
             enabled={isActive}>
             <Reanimated.View style={StyleSheet.absoluteFill}>
-              <TapGestureHandler onEnded={onDoubleTap} numberOfTaps={2}>
+              <TapGestureHandler onEnded={_onDoubleTap} numberOfTaps={2}>
                 <ReanimatedCamera
                   ref={camera}
                   isActive={isActive}
@@ -310,8 +308,8 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
                   lowLightBoost={
                     device.supportsLowLightBoost && enableNightMode
                   }
-                  onInitialized={onInitialized}
-                  onError={onError}
+                  onInitialized={_onInitialized}
+                  onError={_onError}
                   enableZoomGesture={false}
                   animatedProps={cameraAnimatedProps}
                   photo={true}
@@ -335,7 +333,7 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
           <CaptureButton
             style={styles.bottomRow}
             camera={camera}
-            onMediaCaptured={onMediaCaptured}
+            onMediaCaptured={_onMediaCaptured}
             cameraZoom={zoom}
             minZoom={minZoom}
             maxZoom={maxZoom}
@@ -343,27 +341,14 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
             enabled={isCameraInitialized && isActive}
             setIsPressingButton={setIsPressingButton}
           />
-          <Container style={styles.bottomLeftRow}>
-            <PressableOpacity
-              style={styles.squre}
-              onPress={_onGalleryPickup}
-              disabledOpacity={0.4}>
-              <Icon name="images-outline" useIonicons color="white" size={24} />
-            </PressableOpacity>
-          </Container>
-          <Container style={styles.bottomRightRow}>
-            <PressableOpacity
-              style={styles.squre}
-              onPress={onSwitchToAR}
-              disabledOpacity={0.4}>
-              <Icon name="cube-scan" useMaterialicons color="white" size={30} />
-            </PressableOpacity>
-          </Container>
+          {onGalleryPickup}
+          {onSwitchToAR}
+
           <Container style={styles.topRightRow}>
             {supportsCameraFlipping && (
               <PressableOpacity
                 style={styles.button}
-                onPress={onFlipCameraPressed}
+                onPress={_onFlipCameraPressed}
                 disabledOpacity={0.4}>
                 <Icon
                   name="camera-reverse"
@@ -376,7 +361,7 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
             {supportsFlash && (
               <PressableOpacity
                 style={styles.button}
-                onPress={onFlashPressed}
+                onPress={_onFlashPressed}
                 disabledOpacity={0.4}>
                 <Icon
                   name={flash === 'on' ? 'flash' : 'flash-off'}

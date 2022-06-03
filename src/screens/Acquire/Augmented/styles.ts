@@ -36,6 +36,13 @@ export default StyleSheet.create({
     top: SAFE_AREA_PADDING.paddingTop,
     backgroundColor: 'transparent',
   },
+  topLeftRow: {
+    position: 'absolute',
+    left: SAFE_AREA_PADDING.paddingLeft,
+    top: SAFE_AREA_PADDING.paddingTop,
+    backgroundColor: 'transparent',
+    zIndex: 999,
+  },
   bottomRow: {
     flex: 1,
     flexDirection: 'column',
@@ -98,6 +105,15 @@ export default StyleSheet.create({
     marginBottom: 20,
     marginRight: 20,
     backgroundColor: 'transparent',
+  },
+  circle: {
+    marginBottom: CONTENT_SPACING,
+    width: BUTTON_SIZE,
+    height: BUTTON_SIZE,
+    borderRadius: BUTTON_SIZE / 2,
+    backgroundColor: 'rgba(140, 140, 140, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   squre: {
     marginBottom: CONTENT_SPACING,

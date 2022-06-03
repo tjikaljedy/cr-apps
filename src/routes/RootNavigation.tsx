@@ -27,7 +27,7 @@ const RootNavigation = () => {
           ...TransitionPresets.SlideFromRightIOS,
         }
       : {
-          ...TransitionPresets.ModalTransition,
+          ...TransitionPresets.DefaultTransition,
         };
 
   return (
@@ -95,10 +95,7 @@ const RootNavigation = () => {
         />
         <RootStack.Screen
           options={{
-            headerTransparent: true,
-            headerStatusBarHeight: 0,
-            title: '',
-            headerBackTitleVisible: false,
+            headerShown: false,
           }}
           name="AcquireScreen"
           component={Acquire}
