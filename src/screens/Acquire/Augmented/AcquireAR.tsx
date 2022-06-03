@@ -256,7 +256,12 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
                         {screen: 'AcquireDevice'} as never,
                       );
                     }}>
-                    <Icon name="camera" useIonicons color="white" size={24} />
+                    <Icon
+                      name="camera-switch"
+                      useMaterialicons
+                      color="white"
+                      size={24}
+                    />
                   </PressableOpacity>
                 </Container>
               </Container>
