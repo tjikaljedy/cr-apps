@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1130"
+   LastUpgradeVersion = "1330"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
                BuildableName = "crazyrich-tvOS.app"
                BlueprintName = "crazyrich-tvOS"
-               ReferencedContainer = "container:crazyrich.xcodeproj">
+               ReferencedContainer = "container:CrazyRich.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
                BuildableName = "crazyrich-tvOSTests.xctest"
                BlueprintName = "crazyrich-tvOSTests"
-               ReferencedContainer = "container:crazyrich.xcodeproj">
+               ReferencedContainer = "container:CrazyRich.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,7 +57,7 @@
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
             BuildableName = "crazyrich-tvOS.app"
             BlueprintName = "crazyrich-tvOS"
-            ReferencedContainer = "container:crazyrich.xcodeproj">
+            ReferencedContainer = "container:CrazyRich.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -74,7 +74,7 @@
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
             BuildableName = "crazyrich-tvOS.app"
             BlueprintName = "crazyrich-tvOS"
-            ReferencedContainer = "container:crazyrich.xcodeproj">
+            ReferencedContainer = "container:CrazyRich.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

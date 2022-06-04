@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 import {ViroARSceneNavigator} from '@viro-community/react-viro';
 
 interface IProps {
+  arNavigatorRef: any;
   bloomEnabled?: boolean;
   hdrEnabled?: boolean;
   autoFocus?: boolean;
@@ -24,9 +25,7 @@ export default class SnapCameraAR extends React.PureComponent<IProps, IState> {
   render() {
     return (
       <ViroARSceneNavigator
-        bloomEnabled={this.state.bloomEnabled}
-        hdrEnabled={this.state.hdrEnabled}
-        autofocus={this.state.autoFocus}
+        ref={this.props.arNavigatorRef as never}
         style={styles.screenNavContainer}
         initialScene={{
           scene: this.props.onInitialScene as any,

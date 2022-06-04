@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {useNavigation} from '@react-navigation/core';
-import {Image, Animated, BackHandler} from 'react-native';
+import {Image, Animated, BackHandler, SafeAreaView} from 'react-native';
+import Share from 'react-native-share';
 import LottieView from 'lottie-react-native';
 import {PressableOpacity} from 'react-native-pressable-opacity';
 import {ViroConstants} from '@viro-community/react-viro';
@@ -35,15 +36,13 @@ import {
 } from '@src/redux/slices/portalSlice';
 import {updateRenderType} from '@src/redux/slices/renderSlice';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
+import {ViroARSceneNavigator} from '@viro-community/react-viro';
 import {ButtonGrpOption} from '@src/components/elements/ButtonGroup/ButtonGroup';
 import {RecordButton} from '@src/components/elements/SnapCameraAR/RecordButton';
 type AcquireARProps = {};
-
+const kPreviewTypePhoto = 1;
+const kPreviewTypeVideo = 2;
 const AcquireAR: React.FC<AcquireARProps> = () => {
-  BackHandler.addEventListener('hardwareBackPress', function () {
-    return true;
-  });
-
   const dispatch = useAppDispatch();
   const {isPass} = React.useContext(PermissionContext);
   const {userToken} = React.useContext(AuthContext);
@@ -56,10 +55,14 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   const navigation = useNavigation();
   const fadeIn = React.useRef(new Animated.Value(0)).current;
   const fadeOut = React.useRef(new Animated.Value(1)).current;
+  const arNavigatorRef = React.useRef<typeof ViroARSceneNavigator>();
   const [actionButton, setActionButton] = React.useState<
     'arts' | 'portals' | 'camera'
   >('arts');
-
+  const [videoUrl, setVideoUrl] = React.useState('');
+  const [haveSavedMedia, setHaveSavedMedia] = React.useState(false);
+  const [playPreview, setPlayPreview] = React.useState(false);
+  const [previewType, setPreviewType] = React.useState(kPreviewTypeVideo);
   const actionModelOptions: ButtonGrpOption[] = [
     {
       name: 'portals',
@@ -110,14 +113,73 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     dispatch(updatePlanStatus({planReady: tackingNormal}));
   };
 
-  const _renderRecord = () => {
-    return (
-      <RecordButton enabled={true} style={styles.bottomRowControlLeftCenter} />
+  const _onItemArtPress = (item: ArtRowItem) => {
+    dispatch(updateSelectedArt(item));
+    dispatch(updateRenderType({modelRender: actionButton}));
+  };
+
+  const _onItemPortalPress = (item: PortalRowItem) => {
+    dispatch(updateSelectedPortal(item));
+    dispatch(updateRenderType({modelRender: actionButton}));
+  };
+
+  const _onStartRecording = () => {
+    arNavigatorRef.current._startVideoRecording(
+      'crazyrich_video',
+      false,
+      (errorCode: any) => {
+        //display error
+        console.log(errorCode);
+      },
     );
   };
 
-  const _renderScreen = () => {
-    return <ReviewScene onInitialized={_onInitialized} />;
+  const _onStopRecording = () => {
+    arNavigatorRef.current._stopVideoRecording().then((retDict: any) => {
+      if (!retDict.success) {
+        if (retDict.errorCode == ViroConstants.RECORD_ERROR_NO_PERMISSION) {
+          console.log(retDict.errorCode);
+        }
+      }
+      setVideoUrl(retDict.url);
+    });
+  };
+
+  const _openShareActionSheet = async () => {
+    let contentType =
+      previewType == kPreviewTypeVideo ? 'video/mp4' : 'image/png';
+
+    await Share.open({
+      subject: '#CrazyRich',
+      message: '#CrazyRich',
+      url: videoUrl,
+      type: contentType,
+    });
+  };
+
+  const _setIsPressingButton = () => {};
+
+  //PORTALS
+  const _renderItemPortals = (item: PortalRowItem) => {
+    return (
+      <PressableOpacity onPress={() => _onItemPortalPress(item)}>
+        <Image
+          style={[styles.artImage, {borderColor: 'white'}]}
+          source={item.icon_img}
+        />
+      </PressableOpacity>
+    );
+  };
+  const _renderRecord = () => {
+    return (
+      <RecordButton
+        enabled={true}
+        style={styles.bottomRowControlLeftCenter}
+        setIsPressingButton={_setIsPressingButton}
+        onStartRecording={_onStartRecording}
+        onStopRecording={_onStopRecording}
+      />
+    );
   };
 
   //ARTS
@@ -132,30 +194,20 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     );
   };
 
-  const _onItemArtPress = (item: ArtRowItem) => {
-    dispatch(updateSelectedArt(item));
-    dispatch(updateRenderType({modelRender: actionButton}));
+  const _renderScreen = () => {
+    return <ReviewScene onInitialized={_onInitialized} />;
   };
 
-  //PORTALS
-  const _renderItemPortals = (item: PortalRowItem) => {
-    return (
-      <PressableOpacity onPress={() => _onItemPortalPress(item)}>
-        <Image
-          style={[styles.artImage, {borderColor: 'white'}]}
-          source={item.icon_img}
-        />
-      </PressableOpacity>
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
     );
-  };
-
-  const _onItemPortalPress = (item: PortalRowItem) => {
-    dispatch(updateSelectedPortal(item));
-    dispatch(updateRenderType({modelRender: actionButton}));
-  };
+    return () => backHandler.remove();
+  }, []);
 
   return (
-    <Container style={[styles.acquireContainer]}>
+    <SafeAreaView style={[styles.acquireContainer]}>
       <Container style={styles.topLeftRow}>
         <PressableOpacity
           style={[styles.circle]}
@@ -168,7 +220,10 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
       </Container>
       {isPass ? (
         <>
-          <SnapCameraAR onInitialScene={_renderScreen} />
+          <SnapCameraAR
+            arNavigatorRef={arNavigatorRef}
+            onInitialScene={_renderScreen}
+          />
           <Container style={styles.topCenterRow}>
             {!planReady ? (
               <Animated.View
@@ -280,7 +335,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
       ) : (
         <PermissionCamera />
       )}
-    </Container>
+    </SafeAreaView>
   );
 };
 

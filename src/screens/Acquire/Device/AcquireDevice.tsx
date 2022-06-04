@@ -10,14 +10,10 @@ import AuthContext from '@src/context/auth-context';
 import styles from './styles';
 import {ScreenNavigationProps} from '@src/routes/Stacks/types';
 import {PressableOpacity} from 'react-native-pressable-opacity';
-import {BackHandler} from 'react-native';
+import {BackHandler, SafeAreaView} from 'react-native';
 
 type AcquireDeviceProps = {};
 const AcquireDevice: React.FC<AcquireDeviceProps> = () => {
-  BackHandler.addEventListener('hardwareBackPress', function () {
-    return true;
-  });
-
   const dispatch = useAppDispatch();
   const {isPass} = React.useContext(PermissionContext);
   const navigation = useNavigation();
@@ -61,8 +57,16 @@ const AcquireDevice: React.FC<AcquireDeviceProps> = () => {
     );
   };
 
+  React.useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    );
+    return () => backHandler.remove();
+  }, []);
+
   return (
-    <Container style={styles.acquireContainer}>
+    <SafeAreaView style={styles.acquireContainer}>
       <Container style={styles.topLeftRow}>
         <PressableOpacity
           style={[styles.circle]}
@@ -81,7 +85,7 @@ const AcquireDevice: React.FC<AcquireDeviceProps> = () => {
       ) : (
         <PermissionCamera />
       )}
-    </Container>
+    </SafeAreaView>
   );
 };
 

@@ -66,7 +66,6 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
     React.useState(false);
   const zoom = useSharedValue(0);
   const isPressingButton = useSharedValue(false);
-  // check if camera page is active
   const isActive = useIsFocused();
 
   const [cameraPosition, setCameraPosition] = React.useState<'front' | 'back'>(
@@ -75,24 +74,19 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
   const [enableHdr, setEnableHdr] = React.useState(false);
   const [flash, setFlash] = React.useState<'off' | 'on'>('off');
   const [enableNightMode, setEnableNightMode] = React.useState(false);
-
-  // camera format settings
   const devices = useCameraDevices();
   const device = devices[cameraPosition];
-  //const [device, setDevice] = React.useState(devices[cameraPosition]);
 
   const formats = React.useMemo<CameraDeviceFormat[]>(() => {
     if (device?.formats == null) return [];
     return device.formats.sort(sortFormats);
   }, [device?.formats]);
 
-  //#region Memos
   const [is60Fps, setIs60Fps] = React.useState(true);
   const fps = React.useMemo(() => {
     if (!is60Fps) return 30;
 
     if (enableNightMode && !device?.supportsLowLightBoost) {
-      // User has enabled Night Mode, but Night Mode is not natively supported, so we simulate it by lowering the frame rate.
       return 30;
     }
 
@@ -102,7 +96,6 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
         f.frameRateRanges.some((r) => frameRateIncluded(r, 60)),
     );
     if (enableHdr && !supportsHdrAt60Fps) {
-      // User has enabled HDR, but HDR is not supported at 60 FPS.
       return 30;
     }
 
@@ -110,10 +103,8 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
       f.frameRateRanges.some((r) => frameRateIncluded(r, 60)),
     );
     if (!supports60Fps) {
-      // 60 FPS is not supported by any format.
       return 30;
     }
-    // If nothing blocks us from using it, we default to 60 FPS.
     return 60;
   }, [
     device?.supportsLowLightBoost,
@@ -140,18 +131,8 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
     [formats],
   );
   const canToggleNightMode = enableNightMode
-    ? true // it's enabled so you have to be able to turn it off again
-    : (device?.supportsLowLightBoost ?? false) || fps > 30; // either we have native support, or we can lower the FPS
-  //#endregion
-
-  //const format = React.useMemo(() => {
-  //  if (device) {
-  //    return device.formats.find(
-  //      (item) => item.videoWidth === 640 && item.videoHeight === 480,
-  //    );
-  //  }
-  //  return undefined;
-  //}, [device]);
+    ? true
+    : (device?.supportsLowLightBoost ?? false) || fps > 30;
 
   const format = React.useMemo(() => {
     let result = formats;
@@ -168,9 +149,6 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
     return undefined;
   }, [formats, fps, enableHdr]);
 
-  //#region Animated Zoom
-  // This just maps the zoom factor to a percentage value.
-  // so e.g. for [min, neutr., max] values [1, 2, 128] this would result in [0, 0.0081, 1]
   const minZoom = device?.minZoom ?? 1;
   const maxZoom = Math.min(device?.maxZoom ?? 1, MAX_ZOOM_FACTOR);
 
@@ -180,65 +158,49 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
       zoom: z,
     };
   }, [maxZoom, minZoom, zoom]);
-  //#endregion
 
-  //#region Callbacks
   const setIsPressingButton = React.useCallback(
     (_isPressingButton: boolean) => {
       isPressingButton.value = _isPressingButton;
     },
     [isPressingButton],
   );
-  // Camera callbacks
+
+  const frameProcessor = useFrameProcessor((frame) => {
+    'worklet';
+    //const values = examplePlugin(frame);
+    //console.log(`Return Values: ${JSON.stringify(values)}`);
+  }, []);
+
   const _onError = React.useCallback((error: CameraRuntimeError) => {
     console.error(error);
   }, []);
-  //
+
   const _onInitialized = React.useCallback(() => {
     console.log('Camera initialized!');
     setIsCameraInitialized(true);
   }, []);
-  //
+
   const _onMediaCaptured = React.useCallback(
     (media: PhotoFile | VideoFile, type: 'photo' | 'video') => {
       console.log(`Media captured! ${JSON.stringify(media)}`);
     },
     [navigation],
   );
-  //
+
   const _onFlipCameraPressed = React.useCallback(() => {
     setCameraPosition((p) => (p === 'back' ? 'front' : 'back'));
   }, []);
-  //
+
   const _onFlashPressed = React.useCallback(() => {
     setFlash((f) => (f === 'off' ? 'on' : 'off'));
   }, []);
-  //#endregion
 
-  //#region Tap Gesture
   const _onDoubleTap = React.useCallback(() => {
     _onFlipCameraPressed();
   }, [_onFlipCameraPressed]);
-  //#endregion
 
-  //#region Effects
-  const neutralZoom = device?.neutralZoom ?? 1;
-  React.useEffect(() => {
-    // Run everytime the neutralZoomScaled value changes. (reset zoom when device changes)
-    zoom.value = neutralZoom;
-  }, [neutralZoom, zoom]);
-
-  React.useEffect(() => {
-    Camera.getMicrophonePermissionStatus().then((status) =>
-      setHasMicrophonePermission(status === 'authorized'),
-    );
-  }, []);
-  //#endregion
-
-  //#region Pinch to Zoom Gesture
-  // The gesture handler maps the linear pinch gesture (0 - 1) to an exponential curve since a camera's zoom
-  // function does not appear linear to the user. (aka zoom 0.1 -> 0.2 does not look equal in difference as 0.8 -> 0.9)
-  const onPinchGesture = useAnimatedGestureHandler<
+  const _onPinchGesture = useAnimatedGestureHandler<
     PinchGestureHandlerGestureEvent,
     {startZoom?: number}
   >({
@@ -246,7 +208,6 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
       context.startZoom = zoom.value;
     },
     onActive: (event, context) => {
-      // we're trying to map the scale gesture to a linear zoom here
       const startZoom = context.startZoom ?? 0;
       const scale = interpolate(
         event.scale,
@@ -262,15 +223,8 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
       );
     },
   });
-  //#endregion
 
-  const frameProcessor = useFrameProcessor((frame) => {
-    'worklet';
-    //const values = examplePlugin(frame);
-    //console.log(`Return Values: ${JSON.stringify(values)}`);
-  }, []);
-
-  const onFrameProcessorSuggestionAvailable = React.useCallback(
+  const _onFrameProcessorSuggestionAvailable = React.useCallback(
     (suggestion: FrameProcessorPerformanceSuggestion) => {
       console.log(
         `Suggestion available! ${suggestion.type}: Can do ${suggestion.suggestedFrameProcessorFps} FPS`,
@@ -279,12 +233,14 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
     [],
   );
 
+  const neutralZoom = device?.neutralZoom ?? 1;
+  React.useEffect(() => {
+    zoom.value = neutralZoom;
+  }, [neutralZoom, zoom]);
+
   React.useEffect(() => {
     navigation.addListener('beforeRemove', (e) => {
       setIsCameraInitialized(false);
-      //StatusBar.setBackgroundColor(navColor as string);
-      //StatusBar.setBarStyle(navStyle ? 'dark-content' : 'light-content');
-      //changeNavigationBarColor(navColor as string, navStyle, false);
     });
   }, [navigation]);
 
@@ -293,7 +249,7 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
       {device != null && (
         <Container style={[styles.cameraContainer]}>
           <PinchGestureHandler
-            onGestureEvent={onPinchGesture}
+            onGestureEvent={_onPinchGesture}
             enabled={isActive}>
             <Reanimated.View style={StyleSheet.absoluteFill}>
               <TapGestureHandler onEnded={_onDoubleTap} numberOfTaps={2}>
@@ -323,7 +279,7 @@ const SnapCamera: React.FC<SnapCameraProps> = ({
                   orientation="portrait"
                   frameProcessorFps={1}
                   onFrameProcessorPerformanceSuggestionAvailable={
-                    onFrameProcessorSuggestionAvailable
+                    _onFrameProcessorSuggestionAvailable
                   }
                 />
               </TapGestureHandler>
@@ -447,7 +403,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'flex-start',
     bottom: SAFE_AREA_PADDING.paddingBottom + 45,
-    left: SAFE_AREA_PADDING.paddingLeft + 10,
+    left: SAFE_AREA_PADDING.paddingLeft,
     backgroundColor: 'transparent',
   },
   bottomRightRow: {
@@ -455,7 +411,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'flex-end',
     bottom: SAFE_AREA_PADDING.paddingBottom + 45,
-    right: SAFE_AREA_PADDING.paddingRight + 10,
+    right: SAFE_AREA_PADDING.paddingRight,
     backgroundColor: 'transparent',
   },
   squre: {

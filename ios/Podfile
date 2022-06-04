@@ -1,6 +1,6 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
-platform :ios, '10.0'
+platform :ios, '14.7'
 
 
 
@@ -9,18 +9,16 @@ target 'crazyrich' do
   config = use_native_modules!
   use_react_native!(:path => config["reactNativePath"],:hermes_enabled => true)
 
-  target 'crazyrichTests' do
-    inherit! :complete
-    # Pods for testing
-  end
-
   rn_maps_path = '../node_modules/react-native-maps'
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
   pod 'ViroReact', :path => '../node_modules/@viro-community/react-viro/ios/'
-  pod 'ViroKit', :path => '../node_modules/@viro-community/react-viro/ios/dist/ViroRenderer/'
+  pod 'ViroKit_static_lib', :path => '../node_modules/@viro-community/react-viro/ios/dist/ViroRenderer/static_lib'
 
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways/Permission-LocationAlways.podspec"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse/Permission-LocationWhenInUse.podspec"
 
   use_native_modules!
  
@@ -29,6 +27,8 @@ target 'crazyrich' do
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
   # use_flipper!({'Flipper' => '0.75.1', 'Flipper-Folly' => '2.5.3', 'Flipper-RSocket' => '1.3.1'})
+ 
+  use_flipper!({ 'Flipper' => '0.99.0', 'Flipper-Folly' => '2.6.7', 'Flipper-DoubleConversion' => '3.1.7' }) 
   post_install do |installer|
     flipper_post_install(installer)
   end

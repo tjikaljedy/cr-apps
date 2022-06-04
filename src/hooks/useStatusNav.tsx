@@ -37,7 +37,7 @@ class StatusNav {
   static setScreenNav = (params?: ScreenNavProp) => {
     const defaultColor = params?.colors as ThemeColors;
     const defaultTheme = params?.theme;
-    console.log(params?.routeName);
+
     if (
       params?.routeName === 'AcquireAR' ||
       params?.routeName === 'AcquireDevice'

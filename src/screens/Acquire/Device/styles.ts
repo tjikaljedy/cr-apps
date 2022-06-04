@@ -18,7 +18,7 @@ export default StyleSheet.create({
     position: 'absolute',
     alignSelf: 'flex-start',
     bottom: SAFE_AREA_PADDING.paddingBottom + 45,
-    left: SAFE_AREA_PADDING.paddingLeft + 10,
+    left: SAFE_AREA_PADDING.paddingLeft,
     backgroundColor: 'transparent',
   },
   bottomRightRow: {
@@ -26,7 +26,7 @@ export default StyleSheet.create({
     position: 'absolute',
     alignSelf: 'flex-end',
     bottom: SAFE_AREA_PADDING.paddingBottom + 45,
-    right: SAFE_AREA_PADDING.paddingRight + 10,
+    right: SAFE_AREA_PADDING.paddingRight,
     backgroundColor: 'transparent',
   },
   squre: {

@@ -77,3 +77,12 @@ https://github.com/PSPatel5/react-native-boilerplate
   spotlight and a corresponding shadow plane. So each new set of these components are assigned a
   consistent bitMask that's used in SpotLight's "influenceBitMask",
   Viro3DObject's "shadowCastingBitMask" and "lightReceivingBitMask" and Shadow plane (ViroQuad)'s "lightReceivingBitMask"
+
+  <key>NSCameraUsageDescription</key>
+  <string>$(PRODUCT_NAME) needs access to your Camera.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs access to your Microphone.</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>1</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>1</string>

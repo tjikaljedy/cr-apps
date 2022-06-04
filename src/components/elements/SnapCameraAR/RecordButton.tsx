@@ -2,20 +2,15 @@ import React, {useCallback, useMemo, useRef} from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
 import {
   PanGestureHandler,
-  PanGestureHandlerGestureEvent,
   State,
   TapGestureHandler,
   TapGestureHandlerStateChangeEvent,
 } from 'react-native-gesture-handler';
 import Reanimated, {
-  cancelAnimation,
   Easing,
-  Extrapolate,
-  interpolate,
   useAnimatedStyle,
   withSpring,
   withTiming,
-  useAnimatedGestureHandler,
   useSharedValue,
   withRepeat,
 } from 'react-native-reanimated';
@@ -33,26 +28,17 @@ const START_RECORDING_DELAY = 200;
 const BORDER_WIDTH = CAPTURE_BUTTON_SIZE * 0.1;
 
 interface Props extends ViewProps {
-  //camera: React.RefObject<Camera>;
+  onStartRecording: () => void;
+  onStopRecording: () => void;
   onMediaCaptured?: (media?: any, type?: 'photo' | 'video') => void;
-
-  minZoom?: number;
-  maxZoom?: number;
-  cameraZoom?: Reanimated.SharedValue<number>;
-
-  flash?: 'off' | 'on';
-
   enabled: boolean;
-
-  setIsPressingButton?: (isPressingButton: boolean) => void;
+  setIsPressingButton: (isPressingButton: boolean) => void;
 }
 
 const _RecordButton: React.FC<Props> = ({
+  onStartRecording,
+  onStopRecording,
   onMediaCaptured,
-  minZoom,
-  maxZoom,
-  cameraZoom,
-  flash,
   enabled,
   setIsPressingButton,
   style,
@@ -61,51 +47,60 @@ const _RecordButton: React.FC<Props> = ({
   const pressDownDate = useRef<Date | undefined>(undefined);
   const isRecording = useRef(false);
   const recordingProgress = useSharedValue(0);
-
   const isPressingButton = useSharedValue(false);
 
-  //#region Tap handler
   const tapHandler = useRef<TapGestureHandler>();
-  const onHandlerStateChanged = useCallback(
+  const _onHandlerStateChanged = useCallback(
     async ({nativeEvent: event}: TapGestureHandlerStateChangeEvent) => {
       console.debug(`state: ${Object.keys(State)[event.state]}`);
+      switch (event.state) {
+        case State.BEGAN: {
+          if (recordingProgress.value === 0) {
+            recordingProgress.value = 0;
+            isPressingButton.value = true;
+            const now = new Date();
+            pressDownDate.current = now;
+            setTimeout(() => {
+              if (pressDownDate.current === now) {
+                recordingProgress.value++;
+                setIsPressingButton(true);
+                onStartRecording();
+              }
+            }, START_RECORDING_DELAY);
+          } else {
+            //Stop Recording
+            setTimeout(() => {
+              isPressingButton.value = false;
+              setIsPressingButton(false);
+              recordingProgress.value = 0;
+              onStopRecording();
+            }, 500);
+          }
+          return;
+        }
+        case State.END:
+        case State.FAILED:
+        case State.CANCELLED: {
+          const now = new Date();
+          const diff =
+            now.getTime() -
+            (pressDownDate.current == null
+              ? 0
+              : pressDownDate.current.getTime());
+          pressDownDate.current = undefined;
+          if (diff < START_RECORDING_DELAY) {
+            setTimeout(() => {
+              isPressingButton.value = false;
+              setIsPressingButton(false);
+            }, 500);
+          }
+        }
+        default:
+          break;
+      }
     },
     [isPressingButton, recordingProgress, setIsPressingButton],
   );
-  //#endregion
-  //#region Pan handler
-  const panHandler = useRef<PanGestureHandler>();
-  const onPanGestureEvent = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    {offsetY?: number; startY?: number}
-  >({
-    onStart: (event, context) => {
-      context.startY = event.absoluteY;
-      const yForFullZoom = context.startY * 0.7;
-      const offsetYForFullZoom = context.startY - yForFullZoom;
-
-      // extrapolate [0 ... 1] zoom -> [0 ... Y_FOR_FULL_ZOOM] finger position
-      //context.offsetY = interpolate(
-      //  cameraZoom.value,
-      //  [minZoom, maxZoom],
-      //  [0, offsetYForFullZoom],
-      //  Extrapolate.CLAMP,
-      //);
-    },
-    onActive: (event, context) => {
-      const offset = context.offsetY ?? 0;
-      const startY = context.startY ?? SCREEN_HEIGHT;
-      const yForFullZoom = startY * 0.7;
-
-      //cameraZoom.value = interpolate(
-      //  event.absoluteY - offset,
-      //  [yForFullZoom, startY],
-      //  [maxZoom, minZoom],
-      //  Extrapolate.CLAMP,
-      //);
-    },
-  });
-  //#endregion
 
   const shadowStyle = useAnimatedStyle(
     () => ({
@@ -164,25 +159,16 @@ const _RecordButton: React.FC<Props> = ({
       <TapGestureHandler
         enabled={true}
         ref={tapHandler}
-        onHandlerStateChange={onHandlerStateChanged}
+        onHandlerStateChange={_onHandlerStateChanged}
         shouldCancelWhenOutside={false}
-        maxDurationMs={99999999}
-        simultaneousHandlers={panHandler}>
+        maxDurationMs={99999999}>
         <Reanimated.View {...props} style={[buttonStyle, style]}>
-          <PanGestureHandler
-            enabled={true}
-            ref={panHandler}
-            failOffsetX={PAN_GESTURE_HANDLER_FAIL_X}
-            activeOffsetY={PAN_GESTURE_HANDLER_ACTIVE_Y}
-            onGestureEvent={onPanGestureEvent}
-            simultaneousHandlers={tapHandler}>
-            <Reanimated.View style={styles.captureContainer}>
-              <Reanimated.View
-                style={[styles.captureButtonRecord, shadowStyle]}
-              />
-              <View style={styles.captureButton} />
-            </Reanimated.View>
-          </PanGestureHandler>
+          <Reanimated.View style={styles.captureContainer}>
+            <Reanimated.View
+              style={[styles.captureButtonRecord, shadowStyle]}
+            />
+            <View style={styles.captureButton} />
+          </Reanimated.View>
         </Reanimated.View>
       </TapGestureHandler>
     </>
