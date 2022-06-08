@@ -86,3 +86,9 @@ https://github.com/PSPatel5/react-native-boilerplate
   <string>1</string>
   <key>NSPhotoLibraryUsageDescription</key>
   <string>1</string>
+
+### Redux Map
+
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+updateCheckedArt: (uuid: string) => dispatch(updateCheckedArt(uuid)),
+});

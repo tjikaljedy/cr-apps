@@ -6,14 +6,14 @@ import {
   ViroQuad,
   ViroSpotLight,
 } from '@viro-community/react-viro';
-import {ArtRowItem, LOADING, LOADED} from '../../../redux/ArtRowItem';
+import {ArtRowItem, LOADING, LOADED, ROW_TYPE} from '../../../redux/ArtRowItem';
 
 const faker = require('@faker-js/faker');
 interface IProps {
   modelIDProps?: ArtRowItem;
   bitMask: number;
   onLoadCallback: (uuid: any, state: any) => void;
-  onClickStateCallback?: () => void;
+  onClickStateCallback: (uuid: any, state: any, itemType: any) => void;
   hitTestMethod: (callback: any) => void;
 }
 interface IState {
@@ -38,55 +38,73 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
     showParticles: true,
     itemClickedDown: false,
   };
-  private arNodeRef: React.RefObject<typeof ViroNode> = React.createRef();
-  private arSpotRef: React.RefObject<typeof ViroSpotLight> = React.createRef();
+  private arNodeRef: React.RefObject<typeof ViroNode> =
+    React.createRef<typeof ViroNode>();
+  private arSpotRef: React.RefObject<typeof ViroSpotLight> =
+    React.createRef<typeof ViroSpotLight>();
 
   _onDrag = (dragToPos: any, source: any) => {
     // this.setState({lastPosition: [dragToPos[0], dragToPos[1], dragToPos[2]]});
   };
 
-  _onItemClicked = (position: any, source: any) => {
-    console.log(this.state.rotation);
+  _onClickState = (uuid: any) => {
+    return (clickState: any, position: any, source: any) => {
+      if (clickState == 1) {
+        this.state.itemClickedDown = true;
+        setTimeout(() => {
+          this.state.itemClickedDown = false;
+        }, 200);
+      }
+
+      if (clickState == 2) {
+        if (this.state.itemClickedDown) {
+          this._onItemClicked();
+        }
+        this.props.onClickStateCallback(uuid, clickState, ROW_TYPE);
+      }
+    };
   };
 
-  _onPinch = (pinchState: any, scaleFactor: number, source: any) => {
-    var newScale = this.state.scale.map((x: number) => {
-      return x * scaleFactor;
-    });
-    if (pinchState == 3) {
-      this.state.scale = newScale;
-      //this.setState({
-      //  scale: newScale,
-      //});
-      return;
-    }
-    this.arNodeRef.current.setNativeProps({scale: newScale});
-    //this.spotLight.setNativeProps({shadowFarZ: 6 * newScale[0]});
+  _onItemClicked = () => {
+    this.state.runAnimation = !this.state.runAnimation;
+    this.state.showParticles = !this.state.showParticles;
+    this.state.itemClickedDown = false;
   };
 
-  _onRotate = (rotateState: any, rotationFactor: number, source: any) => {
-    if (rotateState == 3) {
-      this.state.rotation = [
-        this.state.rotation[0],
-        this.state.rotation[1] + rotationFactor,
-        this.state.rotation[2],
-      ];
-      /*this.setState({
+  _onPinch = (uuid: any) => {
+    return (pinchState: any, scaleFactor: number, source: any) => {
+      var newScale = this.state.scale.map((x: number) => {
+        return x * scaleFactor;
+      });
+      if (pinchState == 3) {
+        this.state.scale = newScale;
+        this.props.onClickStateCallback(uuid, pinchState, ROW_TYPE);
+        return;
+      }
+      this.arNodeRef.current.setNativeProps({scale: newScale});
+      //this.spotLight.setNativeProps({shadowFarZ: 6 * newScale[0]});
+    };
+  };
+
+  _onRotate = (uuid: any) => {
+    return (rotateState: any, rotationFactor: number, source: any) => {
+      if (rotateState == 3) {
+        this.state.rotation = [
+          this.state.rotation[0],
+          this.state.rotation[1] + rotationFactor,
+          this.state.rotation[2],
+        ];
+        this.props.onClickStateCallback(uuid, rotateState, ROW_TYPE);
+        return;
+      }
+      this.arNodeRef.current.setNativeProps({
         rotation: [
           this.state.rotation[0],
           this.state.rotation[1] + rotationFactor,
           this.state.rotation[2],
         ],
-      });*/
-      return;
-    }
-    this.arNodeRef.current.setNativeProps({
-      rotation: [
-        this.state.rotation[0],
-        this.state.rotation[1] + rotationFactor,
-        this.state.rotation[2],
-      ],
-    });
+      });
+    };
   };
 
   _distance = (vectorOne: any, vectorTwo: any) => {
@@ -188,7 +206,7 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
 
   render() {
     var modelItem = this.props.modelIDProps as ArtRowItem;
-    var uuid = faker.datatype.uuid();
+    var uuid = modelItem.id; //faker.datatype.uuid();
     const transformBehaviors: any = {};
     if (this.state.shouldBillboard) {
       transformBehaviors.transformBehaviors = this.state.shouldBillboard
@@ -246,11 +264,11 @@ export default class ArtItemRender extends React.PureComponent<IProps, IState> {
             materials={'pbr'}
             source={modelItem.obj as any}
             resources={modelItem.resources}
-            onClickState={() => {}}
-            onClick={this._onItemClicked}
+            onClickState={this._onClickState(uuid)}
+            onClick={() => {}}
             onError={() => {}}
-            onRotate={this._onRotate}
-            onPinch={this._onPinch}
+            onRotate={this._onRotate(uuid)}
+            onPinch={this._onPinch(uuid)}
             onLoadStart={this._onObjectLoadStart(uuid)}
             onLoadEnd={this._onObjectLoadEnd(uuid)}
           />

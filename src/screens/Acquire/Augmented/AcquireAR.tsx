@@ -4,12 +4,14 @@ import {Image, Animated, BackHandler, SafeAreaView} from 'react-native';
 import Share from 'react-native-share';
 import LottieView from 'lottie-react-native';
 import {PressableOpacity} from 'react-native-pressable-opacity';
-import {ViroConstants} from '@viro-community/react-viro';
+import {ViroARSceneNavigator, ViroConstants} from '@viro-community/react-viro';
+import CameraRoll from '@react-native-community/cameraroll';
 //ViroTrackingStateConstants or ViroConstants
 //Default
 import PermissionContext from '@src/context/permission-context';
 import {PermissionCamera} from '@src/components/elements/SnapCamera/PermissionCamera';
-
+import AuthContext from '@src/context/auth-context';
+import ReviewScene from './ReviewScene';
 import {
   Container,
   SnapCameraAR,
@@ -17,9 +19,12 @@ import {
   Icon,
   ButtonGroup,
 } from '@src/components/elements';
-import AuthContext from '@src/context/auth-context';
-import ReviewScene from './ReviewScene';
+import {ButtonGrpOption} from '@src/components/elements/ButtonGroup/ButtonGroup';
+import {RecordButton} from '@src/components/elements/SnapCameraAR/RecordButton';
+import SnapDetail from '@src/components/elements/SnapCameraAR/SnapDetail';
 import styles from './styles';
+//REDUX
+
 import {ArtRowItem} from '@src/redux/ArtRowItem';
 import {PortalRowItem} from '@src/redux/PortalRowItem';
 import {
@@ -28,6 +33,7 @@ import {
   updateSelectedArt,
   updatePlanStatus,
   selectAllArts,
+  updateCheckedArt,
 } from '@src/redux/slices/artSlice';
 import {
   fetchPortalsAPI,
@@ -36,12 +42,12 @@ import {
 } from '@src/redux/slices/portalSlice';
 import {updateRenderType} from '@src/redux/slices/renderSlice';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
-import {ViroARSceneNavigator} from '@viro-community/react-viro';
-import {ButtonGrpOption} from '@src/components/elements/ButtonGroup/ButtonGroup';
-import {RecordButton} from '@src/components/elements/SnapCameraAR/RecordButton';
+
+//Start
 type AcquireARProps = {};
 const kPreviewTypePhoto = 1;
 const kPreviewTypeVideo = 2;
+
 const AcquireAR: React.FC<AcquireARProps> = () => {
   const dispatch = useAppDispatch();
   const {isPass} = React.useContext(PermissionContext);
@@ -63,6 +69,8 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   const [haveSavedMedia, setHaveSavedMedia] = React.useState(false);
   const [playPreview, setPlayPreview] = React.useState(false);
   const [previewType, setPreviewType] = React.useState(kPreviewTypeVideo);
+  const _setIsPressingButton = () => {};
+
   const actionModelOptions: ButtonGrpOption[] = [
     {
       name: 'portals',
@@ -124,7 +132,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   };
 
   const _onStartRecording = () => {
-    arNavigatorRef.current._startVideoRecording(
+    arNavigatorRef.current?._startVideoRecording(
       'crazyrich_video',
       false,
       (errorCode: any) => {
@@ -135,14 +143,19 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   };
 
   const _onStopRecording = () => {
-    arNavigatorRef.current._stopVideoRecording().then((retDict: any) => {
+    arNavigatorRef.current?._stopVideoRecording().then((retDict: any) => {
       if (!retDict.success) {
         if (retDict.errorCode == ViroConstants.RECORD_ERROR_NO_PERMISSION) {
           console.log(retDict.errorCode);
         }
       }
-      setVideoUrl(retDict.url);
+      //setVideoUrl(retDict.url);
+      CameraRoll.save(retDict.url);
     });
+  };
+
+  const _onClickState = (uuid: any, state: any, itemType: any) => {
+    dispatch(updateCheckedArt(uuid));
   };
 
   const _openShareActionSheet = async () => {
@@ -157,8 +170,6 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     });
   };
 
-  const _setIsPressingButton = () => {};
-
   //PORTALS
   const _renderItemPortals = (item: PortalRowItem) => {
     return (
@@ -170,6 +181,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
       </PressableOpacity>
     );
   };
+
   const _renderRecord = () => {
     return (
       <RecordButton
@@ -195,7 +207,12 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   };
 
   const _renderScreen = () => {
-    return <ReviewScene onInitialized={_onInitialized} />;
+    return (
+      <ReviewScene
+        onInitialized={_onInitialized}
+        onClickState={_onClickState}
+      />
+    );
   };
 
   React.useEffect(() => {
@@ -289,7 +306,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
                 <ButtonGroup
                   checkedStyle={styles.buttonChecked}
                   defaultStyle={styles.buttonDefault}
-                  containerStyle={styles.bottomRowControlLeftLeft}
+                  containerStyle={styles.bottomRowControlLeftGrp}
                   data={actionModelOptions}
                   defaultValue={'arts'}
                   onItemPressed={(item: ButtonGrpOption) => {
@@ -335,6 +352,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
       ) : (
         <PermissionCamera />
       )}
+      <SnapDetail />
     </SafeAreaView>
   );
 };

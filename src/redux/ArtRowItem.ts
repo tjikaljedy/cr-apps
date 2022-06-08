@@ -5,7 +5,13 @@ export const LOADING = 'LOADING';
 export const LOAD_ERROR = 'ERROR';
 export const LOADED = 'LOADED';
 export const POSITION_OFFSET = 0.05;
+export const ROW_TYPE = 'ART';
 export type ITEM_TYPE = 'ART';
+
+export interface CheckedArtItem {
+  checked_time: any;
+  item_art: ArtRowItem;
+}
 
 export interface ArtRowItem {
   id?: string;

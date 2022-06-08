@@ -4,9 +4,8 @@ import {
   createEntityAdapter,
   PayloadAction,
 } from '@reduxjs/toolkit';
-
 import {mockArts} from '@src/data/mock-arts';
-import {ArtRowItem} from '@src/redux/ArtRowItem';
+import {ArtRowItem, CheckedArtItem} from '@src/redux/ArtRowItem';
 import {RootState} from '../useRedux';
 
 const sliceName = 'artSlice';
@@ -17,6 +16,7 @@ export type ArtState = {
   planReady?: boolean | null | undefined;
   allArts?: Array<ArtRowItem>;
   selectedArt?: ArtRowItem;
+  checkedArt?: CheckedArtItem;
 };
 
 type ArtPayload = {
@@ -25,6 +25,7 @@ type ArtPayload = {
     planReady?: boolean | null | undefined;
     allArts?: Array<ArtRowItem>;
     selectedArt?: ArtRowItem;
+    uuid?: string;
   };
 };
 
@@ -35,6 +36,7 @@ export const fetchArtsAPI = createAsyncThunk(
     return mockArts;
   },
 );
+
 //Source from modern-redux
 const artsAdapter = createEntityAdapter<arts>({
   selectId: (arts: ArtRowItem) => arts.id as any,
@@ -47,6 +49,7 @@ const slice = createSlice({
     planReady: false,
     allArts: [],
     selectedArt: undefined,
+    checkedArt: undefined,
   } as ArtState),
   reducers: {
     updatePlanStatus(state: ArtState, {payload: {planReady}}: ArtPayload) {
@@ -59,6 +62,14 @@ const slice = createSlice({
     resetSelectionArts(state: ArtState) {
       state.allArts = [];
       state.selectedArt = undefined;
+    },
+    updateCheckedArt(state: ArtState, action: PayloadAction<string>) {
+      const now = new Date();
+      let allDatas = state.allArts?.find((f) => f.id === action.payload);
+      state.checkedArt = {
+        checked_time: now.getTime(),
+        item_art: allDatas as ArtRowItem,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -78,11 +89,16 @@ const slice = createSlice({
 //Sample from ts-rn
 const {actions, reducer} = slice;
 
-export const {updatePlanStatus, updateSelectedArt, resetSelectionArts} =
-  actions;
+export const {
+  updatePlanStatus,
+  updateSelectedArt,
+  resetSelectionArts,
+  updateCheckedArt,
+} = actions;
 export const fetchAllSelectionArts = (state: RootState) =>
   state.artSlice.allArts;
 export const selectedArt = (state: RootState) => state.artSlice.selectedArt;
+export const checkedArt = (state: RootState) => state.artSlice.checkedArt;
 export const fetchPlanStatus = (state: RootState) => state.artSlice.planReady;
 
 export const {selectAll: selectAllArts} = artsAdapter.getSelectors(

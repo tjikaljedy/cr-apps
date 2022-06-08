@@ -12,6 +12,13 @@ export const selectSortedArts = createSelector([selectAllArts], (arts) => {
   return currentArts;
 });
 
+export const selectArtsById = (arg1: any) =>
+  createSelector([selectAllArts], (arts) => {
+    let currentArts: ArtRowItem[] = arts;
+    console.log(arg1);
+    return currentArts;
+  });
+
 export const selectSortedPortals = createSelector(
   [selectAllPortals],
   (portals) => {

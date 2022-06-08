@@ -75,7 +75,6 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
     position: 'absolute',
     bottom: 0,
-    width: 80,
     padding: 0,
     margin: 0,
   },
@@ -89,7 +88,7 @@ export default StyleSheet.create({
     padding: 0,
     margin: 0,
   },
-  bottomRowControlLeftLeft: {
+  bottomRowControlLeftGrp: {
     flex: 1,
     marginBottom: 20,
     marginLeft: 20,
@@ -158,5 +157,30 @@ export default StyleSheet.create({
     width: 47,
     borderWidth: 1.5,
     borderRadius: 9,
+  },
+
+  snapDetailContainer: {
+    marginTop: CONTENT_SPACING * 2,
+  },
+  snapDetailSection: {
+    padding: 10,
+    backgroundColor: 'white',
+    color: 'black',
+  },
+  buttonContainer: {
+    paddingTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  addToBasketButton: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  addToBasketButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    padding: 2,
+    color: 'white',
   },
 });

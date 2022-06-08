@@ -10,7 +10,8 @@ import {PortalRowItem} from '@src/redux/PortalRowItem';
 import ArtItemRender from '@src/components/elements/SnapCameraAR/ArtItemRender';
 import PortalItemRender from '@src/components/elements/SnapCameraAR/PortalItemRender';
 import {connect} from 'react-redux';
-import {RootState} from '@src/redux/useRedux';
+import {RootState, AppDispatch} from '@src/redux/useRedux';
+import {updateCheckedArt} from '@src/redux/slices/artSlice';
 const faker = require('@faker-js/faker');
 
 const mapStateToProps = (state: RootState) => ({
@@ -24,6 +25,7 @@ const mapDispatchToProps = () => ({});
 
 interface IProps {
   onInitialized: (state: any, reason: any) => void;
+  onClickState: (uuid: any, state: any, itemType: any) => void;
 }
 interface IState {}
 
@@ -33,11 +35,13 @@ class ReviewScene extends React.PureComponent<
     IProps,
   IState
 > {
-  private arSceneRef: React.RefObject<typeof ViroARScene> = React.createRef();
+  private arSceneRef: React.RefObject<typeof ViroARScene> =
+    React.createRef<typeof ViroARScene>();
   private artObjects: any = [];
   private portalObjects: any = [];
   private defaultBitMask = 2;
   _onLoadCallback = (uuid: any, state: any) => {};
+
   _onHitTestMethod = (callback: any) => {
     this.arSceneRef.current
       .getCameraOrientationAsync()
@@ -57,12 +61,14 @@ class ReviewScene extends React.PureComponent<
       if (modelItem) {
         var uuid = faker.datatype.uuid();
         var itemBitMask = Math.pow(2, this.defaultBitMask);
+
         this.artObjects.push(
           <ArtItemRender
             key={uuid}
             modelIDProps={modelItem}
             bitMask={itemBitMask}
             onLoadCallback={this._onLoadCallback}
+            onClickStateCallback={this.props.onClickState}
             hitTestMethod={this._onHitTestMethod}
           />,
         );
@@ -117,4 +123,4 @@ class ReviewScene extends React.PureComponent<
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps())(ReviewScene);
+export default connect(mapStateToProps, mapDispatchToProps)(ReviewScene);

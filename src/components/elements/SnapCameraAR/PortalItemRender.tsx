@@ -50,8 +50,10 @@ export default class PortalItemRender extends React.PureComponent<
     insidePortal: true,
     itemClickedDown: false,
   };
-  private arNodeRef: React.RefObject<typeof ViroNode> = React.createRef();
-  private arSpotRef: React.RefObject<typeof ViroSpotLight> = React.createRef();
+  private arNodeRef: React.RefObject<typeof ViroNode> =
+    React.createRef<typeof ViroNode>();
+  private arSpotRef: React.RefObject<typeof ViroSpotLight> =
+    React.createRef<typeof ViroSpotLight>();
 
   _onDrag = (dragToPos: any, source: any) => {
     //
@@ -249,7 +251,7 @@ export default class PortalItemRender extends React.PureComponent<
             direction={[0, -1, 0]}
             position={[0, 6, 0]}
             color="#ffffff"
-            castShadows={true}
+            castsShadow={true}
             shadowNearZ={0.1}
             shadowFarZ={5}
             shadowOpacity={0.9}
