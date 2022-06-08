@@ -10,7 +10,7 @@ type SnapDetailProps = {};
 
 const SnapDetail: React.FC<SnapDetailProps> = () => {
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = React.useMemo(() => ['30%', '33%'], []);
+  const snapPoints = React.useMemo(() => ['28%', '28%'], []);
   const checkedItem = useAppSelector(checkedArt);
 
   const handleSheetChanges = React.useCallback((index: number) => {}, []);
@@ -21,6 +21,7 @@ const SnapDetail: React.FC<SnapDetailProps> = () => {
         {...props}
         disappearsOnIndex={-1}
         appearsOnIndex={1}
+        opacity={0.1}
         pressBehavior={'close'}
       />
     ),
@@ -38,10 +39,11 @@ const SnapDetail: React.FC<SnapDetailProps> = () => {
       index={-1}
       style={styles.snapDetailContainer}
       snapPoints={snapPoints}
+      backgroundStyle={{backgroundColor: 'rgba(0, 0, 0, 0.6)'}}
       backdropComponent={renderBackdrop}
       onChange={handleSheetChanges}>
       <Container style={styles.snapDetailSection}>
-        <Section title={checkedItem?.item_art.name}></Section>
+        <Section titleColor={'white'} title={'<title>'}></Section>
       </Container>
     </BottomSheet>
   );
@@ -53,8 +55,7 @@ const styles = StyleSheet.create({
   },
   snapDetailSection: {
     padding: 10,
-    backgroundColor: 'white',
-    color: 'black',
+    backgroundColor: '#00000000',
   },
   buttonContainer: {
     paddingTop: 20,

@@ -2,7 +2,6 @@ import * as React from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {Image, Animated, BackHandler, SafeAreaView} from 'react-native';
 import Share from 'react-native-share';
-import LottieView from 'lottie-react-native';
 import {PressableOpacity} from 'react-native-pressable-opacity';
 import {ViroARSceneNavigator, ViroConstants} from '@viro-community/react-viro';
 import CameraRoll from '@react-native-community/cameraroll';
@@ -29,7 +28,6 @@ import {ArtRowItem} from '@src/redux/ArtRowItem';
 import {PortalRowItem} from '@src/redux/PortalRowItem';
 import {
   fetchArtsAPI,
-  fetchPlanStatus,
   updateSelectedArt,
   updatePlanStatus,
   selectAllArts,
@@ -42,6 +40,7 @@ import {
 } from '@src/redux/slices/portalSlice';
 import {updateRenderType} from '@src/redux/slices/renderSlice';
 import {useAppDispatch, useAppSelector} from '@src/redux/useRedux';
+import PlanReady from '@src/components/elements/SnapCameraAR/PlanReady';
 
 //Start
 type AcquireARProps = {};
@@ -54,13 +53,10 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   const {userToken} = React.useContext(AuthContext);
   //Arts and Portal
   const allArts = useAppSelector(selectAllArts);
-  const planReady = useAppSelector(fetchPlanStatus);
   const allPortals = useAppSelector(selectAllPortals);
 
   //Navigatiion and button
   const navigation = useNavigation();
-  const fadeIn = React.useRef(new Animated.Value(0)).current;
-  const fadeOut = React.useRef(new Animated.Value(1)).current;
   const arNavigatorRef = React.useRef<typeof ViroARSceneNavigator>();
   const [actionButton, setActionButton] = React.useState<
     'arts' | 'portals' | 'camera'
@@ -69,7 +65,6 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
   const [haveSavedMedia, setHaveSavedMedia] = React.useState(false);
   const [playPreview, setPlayPreview] = React.useState(false);
   const [previewType, setPreviewType] = React.useState(kPreviewTypeVideo);
-  const _setIsPressingButton = () => {};
 
   const actionModelOptions: ButtonGrpOption[] = [
     {
@@ -92,26 +87,6 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     dispatch<any>(fetchArtsAPI());
     dispatch<any>(fetchPortalsAPI());
   }, [dispatch]);
-
-  React.useEffect(() => {
-    Animated.timing(fadeIn, {
-      toValue: planReady ? 0 : 1,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-    Animated.sequence([
-      Animated.timing(fadeOut, {
-        toValue: planReady ? 1 : 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeOut, {
-        toValue: 0,
-        delay: 1000,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [planReady, fadeIn, fadeOut]);
 
   const _onInitialized = (state: any, reason: any) => {
     var tackingNormal = false;
@@ -142,6 +117,8 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     );
   };
 
+  const _setIsPressingButton = () => {};
+
   const _onStopRecording = () => {
     arNavigatorRef.current?._stopVideoRecording().then((retDict: any) => {
       if (!retDict.success) {
@@ -170,26 +147,12 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     });
   };
 
-  //PORTALS
-  const _renderItemPortals = (item: PortalRowItem) => {
+  //SCREEN
+  const _renderScreen = () => {
     return (
-      <PressableOpacity onPress={() => _onItemPortalPress(item)}>
-        <Image
-          style={[styles.artImage, {borderColor: 'white'}]}
-          source={item.icon_img}
-        />
-      </PressableOpacity>
-    );
-  };
-
-  const _renderRecord = () => {
-    return (
-      <RecordButton
-        enabled={true}
-        style={styles.bottomRowControlLeftCenter}
-        setIsPressingButton={_setIsPressingButton}
-        onStartRecording={_onStartRecording}
-        onStopRecording={_onStopRecording}
+      <ReviewScene
+        onInitialized={_onInitialized}
+        onClickState={_onClickState}
       />
     );
   };
@@ -206,12 +169,94 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
     );
   };
 
-  const _renderScreen = () => {
+  //PORTALS
+  const _renderItemPortals = (item: PortalRowItem) => {
     return (
-      <ReviewScene
-        onInitialized={_onInitialized}
-        onClickState={_onClickState}
-      />
+      <PressableOpacity onPress={() => _onItemPortalPress(item)}>
+        <Image
+          style={[styles.artImage, {borderColor: 'white'}]}
+          source={item.icon_img}
+        />
+      </PressableOpacity>
+    );
+  };
+
+  const MainControl = () => {
+    return (
+      <Animated.View style={[styles.bottomRow]}>
+        <Container style={[styles.bottomRowControl]}>
+          <Container style={[styles.bottomRowControlLeft]}>
+            <ButtonGroup
+              checkedStyle={styles.buttonChecked}
+              defaultStyle={styles.buttonDefault}
+              containerStyle={styles.bottomRowControlLeftGrp}
+              data={actionModelOptions}
+              defaultValue={'arts'}
+              onItemPressed={(item: ButtonGrpOption) => {
+                setActionButton(item.value as any);
+              }}
+            />
+          </Container>
+          <Container style={[styles.bottomRowControlCenter]}>
+            <RecordButton
+              enabled={true}
+              style={styles.bottomRowControlLeftCenter}
+              setIsPressingButton={_setIsPressingButton}
+              onStartRecording={_onStartRecording}
+              onStopRecording={_onStopRecording}
+            />
+          </Container>
+          <RightControl />
+        </Container>
+        <Carousel
+          data={actionButton === 'arts' ? allArts : allPortals}
+          renderContent={
+            actionButton === 'arts' ? _renderItemArts : _renderItemPortals
+          }
+          itemWidth={60}
+          enableSnap={false}
+          hasPagination={false}
+        />
+      </Animated.View>
+    );
+  };
+  const RightControl = () => {
+    return (
+      <Container style={[styles.bottomRowControlRight]}>
+        <Container style={styles.bottomRowControlLeftRight}>
+          <PressableOpacity
+            style={[styles.squre]}
+            disabledOpacity={0.4}
+            onPress={() => {
+              navigation.navigate(
+                'AcquireScreen' as never,
+                {screen: 'AcquireDevice'} as never,
+              );
+            }}>
+            <Icon
+              name="camera-switch"
+              useMaterialicons
+              color="white"
+              size={24}
+            />
+          </PressableOpacity>
+        </Container>
+      </Container>
+    );
+  };
+
+  const BackButton = () => {
+    return (
+      <Container style={styles.topLeftRow}>
+        <PressableOpacity
+          style={[styles.circle]}
+          disabledOpacity={0.4}
+          onPress={() => {
+            navigation.navigate('HomeScreen' as never);
+          }}>
+          <Icon name="close" useIonicons color="white" size={28} />
+        </PressableOpacity>
+      </Container>
     );
   };
 
@@ -225,129 +270,15 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
 
   return (
     <SafeAreaView style={[styles.acquireContainer]}>
-      <Container style={styles.topLeftRow}>
-        <PressableOpacity
-          style={[styles.circle]}
-          disabledOpacity={0.4}
-          onPress={() => {
-            navigation.navigate('HomeScreen' as never);
-          }}>
-          <Icon name="close" useIonicons color="white" size={28} />
-        </PressableOpacity>
-      </Container>
+      <BackButton />
       {isPass ? (
         <>
           <SnapCameraAR
             arNavigatorRef={arNavigatorRef}
             onInitialScene={_renderScreen}
           />
-          <Container style={styles.topCenterRow}>
-            {!planReady ? (
-              <Animated.View
-                style={{
-                  flex: 1,
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginTop: 50,
-                  opacity: fadeIn,
-                }}>
-                <LottieView
-                  style={{
-                    alignSelf: 'center',
-                    width: '45%',
-                    marginBottom: 10,
-                  }}
-                  source={require('@src/assets/animations/load-ar-screen.json')}
-                  autoPlay
-                  loop={true}
-                  onAnimationFinish={() => {}}
-                />
-                <Image
-                  style={{
-                    flex: 1,
-                    resizeMode: 'contain',
-                    height: 30,
-                  }}
-                  source={require('@src/assets/arts/icon_initializing_text.png')}
-                />
-              </Animated.View>
-            ) : (
-              <Animated.View
-                style={{
-                  flex: 1,
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginTop: 50,
-                  opacity: fadeOut,
-                }}>
-                <Image
-                  style={{
-                    flex: 1,
-                    height: 80,
-                    marginBottom: 10,
-                    resizeMode: 'contain',
-                  }}
-                  source={require('@src/assets/arts/icon_initializing_device.png')}
-                />
-                <Image
-                  style={{
-                    flex: 1,
-                    resizeMode: 'contain',
-                    height: 30,
-                  }}
-                  source={require('@src/assets/arts/icon_initializing_text_done.png')}
-                />
-              </Animated.View>
-            )}
-          </Container>
-          <Container style={[styles.bottomRow]}>
-            <Container style={[styles.bottomRowControl]}>
-              <Container style={[styles.bottomRowControlLeft]}>
-                <ButtonGroup
-                  checkedStyle={styles.buttonChecked}
-                  defaultStyle={styles.buttonDefault}
-                  containerStyle={styles.bottomRowControlLeftGrp}
-                  data={actionModelOptions}
-                  defaultValue={'arts'}
-                  onItemPressed={(item: ButtonGrpOption) => {
-                    setActionButton(item.value as any);
-                  }}
-                />
-              </Container>
-              <Container style={[styles.bottomRowControlCenter]}>
-                {_renderRecord()}
-              </Container>
-              <Container style={[styles.bottomRowControlRight]}>
-                <Container style={styles.bottomRowControlLeftRight}>
-                  <PressableOpacity
-                    style={[styles.squre]}
-                    disabledOpacity={0.4}
-                    onPress={() => {
-                      navigation.navigate(
-                        'AcquireScreen' as never,
-                        {screen: 'AcquireDevice'} as never,
-                      );
-                    }}>
-                    <Icon
-                      name="camera-switch"
-                      useMaterialicons
-                      color="white"
-                      size={24}
-                    />
-                  </PressableOpacity>
-                </Container>
-              </Container>
-            </Container>
-            <Carousel
-              data={actionButton === 'arts' ? allArts : allPortals}
-              renderContent={
-                actionButton === 'arts' ? _renderItemArts : _renderItemPortals
-              }
-              itemWidth={60}
-              enableSnap={false}
-              hasPagination={false}
-            />
-          </Container>
+          <PlanReady />
+          <MainControl />
         </>
       ) : (
         <PermissionCamera />
