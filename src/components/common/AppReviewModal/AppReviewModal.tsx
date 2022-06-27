@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Linking, View } from 'react-native';
+import {Linking, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import dayjs from 'dayjs';
-import { Button, Dialog, Divider, Text } from '@src/components/elements';
-import { getStoreName, getStoreURL } from '@src/utils/store-info';
-import { AppReviewConfig } from '@src/constants';
+import {Button, Dialog, Divider, Text} from '@src/components/elements';
+import {getStoreName, getStoreURL} from '@src/utils/store-info';
+import {AppReviewConfig} from '@src/constants';
 
-const { REMIND_LATER_DATE, CANCELED, USES_UNTIL_SHOW } = AppReviewConfig;
+const {REMIND_LATER_DATE, CANCELED, USES_UNTIL_SHOW} = AppReviewConfig;
 
 type AppReviewModalProps = {
   storeURL?: string;
@@ -21,7 +21,7 @@ const AppReviewModal: React.FC<AppReviewModalProps> = ({
   storeURL = getStoreURL(),
   daysBeforeReminding = 1,
   usesUntilShow = 0,
-  rateButtonText = 'Rate Food Star',
+  rateButtonText = 'Rate CrazyRich',
   remindLaterButtonText = 'Remind me later',
   cancelButtonText = 'No, thanks',
 }) => {
@@ -96,12 +96,12 @@ const AppReviewModal: React.FC<AppReviewModalProps> = ({
 
   return (
     <Dialog
-      title={'Enjoying Food Star app?'}
+      title={'Enjoying CrazyRich app?'}
       isTitleCentered
       isVisible={isShowAppReview}
       footer={_renderFooter()}>
       <Text isCenter>
-        If you enjoy Food Star, please take a moment to rate it in{' '}
+        If you enjoy CrazyRich, please take a moment to rate it in{' '}
         {getStoreName()}. Your support is deeply appreciated!
       </Text>
     </Dialog>

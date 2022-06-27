@@ -50,9 +50,9 @@ const SelectLocation: React.FC<SelectLocationProps> = () => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-          title: 'Food Delivery App Permission',
+          title: 'CrazyRich App Permission',
           message:
-            'Food Delivery App needs access to your location ' +
+            'CrazyRich App needs access to your location ' +
             'so you see where you are on the map.',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',

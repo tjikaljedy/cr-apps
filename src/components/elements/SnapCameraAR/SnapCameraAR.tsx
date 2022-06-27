@@ -30,6 +30,7 @@ export default class SnapCameraAR extends React.PureComponent<IProps, IState> {
         initialScene={{
           scene: this.props.onInitialScene as any,
         }}
+        worldAlignment={'GravityAndHeading'}
       />
     );
   }
