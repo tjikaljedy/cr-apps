@@ -22,6 +22,7 @@ export default class SnapCameraAR extends React.PureComponent<IProps, IState> {
     hdrEnabled: this.props.hdrEnabled ? this.props.hdrEnabled : false,
     autoFocus: this.props.autoFocus ? this.props.autoFocus : false,
   };
+  // worldAlignment={'GravityAndHeading'}
   render() {
     return (
       <ViroARSceneNavigator
@@ -30,7 +31,6 @@ export default class SnapCameraAR extends React.PureComponent<IProps, IState> {
         initialScene={{
           scene: this.props.onInitialScene as any,
         }}
-        worldAlignment={'GravityAndHeading'}
       />
     );
   }

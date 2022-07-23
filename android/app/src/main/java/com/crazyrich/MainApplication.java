@@ -15,6 +15,7 @@ import com.facebook.react.bridge.JSIModulePackage;
 import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.viromedia.bridge.ReactViroPackage;
+//import com.horcrux.svg.SvgPackage;
 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
 
@@ -34,6 +35,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
       packages.add(
           new ReactViroPackage(ReactViroPackage.ViroPlatform.valueOf("AR")));
       packages.add(new LottiePackage());
+      // packages.add(new SvgPackage());
       return packages;
     }
 

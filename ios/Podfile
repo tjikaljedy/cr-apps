@@ -15,10 +15,16 @@ target 'crazyrich' do
   pod 'Google-Maps-iOS-Utils'
   pod 'ViroReact', :path => '../node_modules/@viro-community/react-viro/ios/'
   pod 'ViroKit_static_lib', :path => '../node_modules/@viro-community/react-viro/ios/dist/ViroRenderer/static_lib'
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways/Permission-LocationAlways.podspec"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse/Permission-LocationWhenInUse.podspec"
+
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    [...]
+    'RCTImage', 
+  ]
 
   use_native_modules!
  

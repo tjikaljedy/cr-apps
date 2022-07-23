@@ -92,3 +92,34 @@ https://github.com/PSPatel5/react-native-boilerplate
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
 updateCheckedArt: (uuid: string) => dispatch(updateCheckedArt(uuid)),
 });
+
+{
+id: faker.datatype.uuid(),
+name: 'workout',
+selected: false,
+loading: NONE,
+icon_img: {
+uri: `https://crazyrich-app.herokuapp.com/arts/icon_workout.png`,
+},
+obj: require('@src/assets/arts/push-up/push-up.vrx'),
+materials: null,
+animation: {name: 'mixamo.com', delay: 0, loop: true, run: true},
+scale: [0.009, 0.009, 0.009],
+position: [0, 0.497823 + POSITION_OFFSET, 0],
+type: 'VRX',
+item_type: 'ART',
+physics: undefined,
+ref_pointer: undefined,
+resources: [
+require('@src/assets/arts/push-up/Ch08_1001_Diffuse.png'),
+require('@src/assets/arts/push-up/Ch08_1001_Glossiness.png'),
+require('@src/assets/arts/push-up/Ch08_1001_Normal.png'),
+require('@src/assets/arts/push-up/Ch08_1001_Specular.png'),
+require('@src/assets/arts/push-up/Ch08_1002_Diffuse.png'),
+require('@src/assets/arts/push-up/Ch08_1002_Glossiness.png'),
+require('@src/assets/arts/push-up/Ch08_1002_Normal.png'),
+require('@src/assets/arts/push-up/Ch08_1002_Specular.png'),
+require('@src/assets/arts/push-up/Ch08_1003_Diffuse.png'),
+require('@src/assets/arts/push-up/Ch08_1003_Normal.png'),
+],
+},

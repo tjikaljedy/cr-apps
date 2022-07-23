@@ -283,7 +283,7 @@ const AcquireAR: React.FC<AcquireARProps> = () => {
       ) : (
         <PermissionCamera />
       )}
-      <SnapDetail />
+      {/*<SnapDetail />*/}
     </SafeAreaView>
   );
 };

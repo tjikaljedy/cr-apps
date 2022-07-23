@@ -25,18 +25,18 @@ android {
     //dexOptions {
     //    javaMaxHeapSize "4g"
     //}
-    /*flavorDimensions "platform"
+    flavorDimensions "platform"
     productFlavors {
         gvr {
             dimension "platform"
             buildConfigField 'String', 'VR_PLATFORM', '"GVR"'
-        }
+       }
         ovr {
             dimension "platform"
             applicationIdSuffix '.ovr'
             buildConfigField 'String', 'VR_PLATFORM', '"OVR_MOBILE"'
         }
-    }*/
+    }
     
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -114,6 +114,7 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     implementation project(':lottie-react-native')
+    //implementation project(':react-native-svg')
     implementation project(':gvr_common')
     implementation project(':arcore_client')
     implementation project(path: ':react_viro')

@@ -59,6 +59,7 @@ const Account: React.FC<AccountProps> = () => {
           rightIcon={<Icon name={chevronIconName} />}
         />
       </Container>
+
       <Container style={styles.accountMenuItemContainer}>
         <Divider />
         <Divider />

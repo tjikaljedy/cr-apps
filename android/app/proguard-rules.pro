@@ -9,6 +9,8 @@
 
 # Add any project specific keep options here:
 -dontobfuscate
+# SVG
+-keep public class com.horcrux.svg.** {*;}
 
 # VIRO
 -keep class com.viro.** { *; }
